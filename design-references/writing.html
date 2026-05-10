@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing — The Turing Blog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Bowlby+One&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#15171a;
+    --paper-2:#1f2227;
+    --paper-3:#2a2e34;
+    --ink:#f0ebe0;
+    --ink-soft:#bfb8a8;
+    --ink-mute:#7a7568;
+    --rule:#3a3e46;
+    --coral:#87CF40;
+    --coral-dark:#9eda5c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+    font-size:16px;line-height:1.55;
+    font-variation-settings:"opsz" 14;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--coral);color:var(--paper)}
+
+  /* NAV (same as everywhere) */
+  nav.top{
+    padding:18px 0;border-bottom:1px solid var(--rule);
+    position:sticky;top:0;background:rgba(21,23,26,.92);backdrop-filter:blur(8px);z-index:100;
+  }
+  .nav-container{max-width:1120px;margin:0 auto;padding:0 48px}
+  .nav-inner{display:flex;justify-content:space-between;align-items:center}
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Bowlby One',sans-serif;
+    font-size:1.15rem;line-height:1;letter-spacing:.01em;
+    text-decoration:none;color:var(--ink);
+  }
+  .logo .dot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex-shrink:0}
+  .logo .accent{color:var(--coral)}
+  .nav-right{display:flex;gap:18px;align-items:center;font-size:14px;font-weight:500}
+  .nav-right a{transition:color .2s;position:relative;color:var(--ink)}
+  .nav-right a:hover{color:var(--coral)}
+  .nav-right a.active{color:var(--coral)}
+  .nav-right a.active::after{
+    content:"";position:absolute;left:0;right:0;bottom:-22px;height:3px;background:var(--coral);
+  }
+  .nav-sep{width:1px;height:18px;background:var(--rule);margin:0 4px}
+  .nav-right a.social{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:32px;height:32px;border-radius:50%;color:var(--ink-soft);
+    transition:color .2s, background .2s;
+  }
+  .nav-right a.social:hover{color:var(--coral);background:var(--paper-2)}
+  .nav-right a.social::after{display:none}
+  .nav-right a.cv-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:6px 12px;border-radius:999px;
+    border:1.5px solid var(--coral);
+    color:var(--ink);font-size:13px;font-weight:600;letter-spacing:.02em;
+  }
+  .nav-right a.cv-btn:hover{background:var(--coral);color:var(--paper)}
+  .nav-right a.cv-btn::after{display:none}
+  .nav-right a.cv-btn .arr{font-size:11px;font-weight:700}
+  .lang-toggle{
+    display:flex;background:var(--paper-2);border:1px solid var(--rule);
+    border-radius:999px;padding:3px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;
+  }
+  .lang-toggle span{padding:3px 10px;border-radius:999px;color:var(--ink-mute)}
+  .lang-toggle span.active{background:var(--coral);color:var(--paper)}
+
+  /* PAGE WRAP */
+  .archive-wrap{max-width:880px;margin:0 auto;padding:64px 48px 96px}
+
+  /* PAGE HEADER */
+  .archive-header{margin-bottom:48px}
+  .archive-eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-size:13px;color:var(--ink-mute);font-weight:500;
+    margin-bottom:16px;letter-spacing:.02em;text-transform:uppercase;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .archive-eyebrow .dot{width:3px;height:3px;border-radius:50%;background:var(--ink-mute);flex-shrink:0}
+  .archive-title{
+    font-size:clamp(2.5rem,6vw,4rem);line-height:1;
+    font-weight:800;font-variation-settings:"opsz" 96;
+    letter-spacing:-.02em;margin-bottom:16px;
+  }
+  .archive-title .it{font-style:italic;color:var(--coral-dark);font-weight:700}
+  .archive-lede{
+    font-size:1.1rem;line-height:1.5;color:var(--ink-soft);
+    font-weight:500;max-width:560px;
+  }
+
+  /* FILTER BAR */
+  .filter-bar{
+    display:flex;gap:8px;flex-wrap:wrap;
+    padding:16px 0;margin-bottom:24px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    align-items:center;
+  }
+  .filter-label{
+    font-size:11px;color:var(--ink-mute);
+    letter-spacing:.05em;text-transform:uppercase;font-weight:600;
+    margin-right:8px;font-family:'JetBrains Mono',monospace;
+  }
+  .filter-pill{
+    font-size:13px;font-weight:600;
+    padding:6px 14px;border-radius:999px;
+    border:1.5px solid var(--rule);
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:all .2s;
+    background:transparent;
+    font-family:inherit;
+  }
+  .filter-pill:hover{border-color:var(--coral);color:var(--ink)}
+  .filter-pill.active{
+    background:var(--coral);border-color:var(--coral);color:var(--paper);
+  }
+  .filter-pill .count{
+    font-family:'JetBrains Mono',monospace;
+    opacity:.6;font-size:11px;margin-left:6px;
+  }
+
+  /* POST FEED */
+  .post-feed{
+    display:flex;flex-direction:column;
+  }
+  .post-card{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:32px;
+    padding:32px 0;
+    border-bottom:1px solid var(--rule);
+    transition:padding .2s;
+    align-items:start;
+  }
+  .post-card:last-child{border-bottom:none}
+  .post-card:hover .post-card-title{color:var(--coral)}
+  .post-card-main{min-width:0}
+  .post-card-meta{
+    display:flex;align-items:center;gap:12px;
+    font-size:12px;color:var(--ink-mute);font-weight:500;
+    margin-bottom:14px;letter-spacing:.02em;text-transform:uppercase;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .post-card-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--ink-mute);flex-shrink:0}
+  .post-card-meta .tag{
+    color:var(--coral);text-transform:none;letter-spacing:0;
+  }
+  .post-card-title{
+    font-size:1.6rem;line-height:1.2;
+    font-weight:700;font-variation-settings:"opsz" 64;
+    letter-spacing:-.01em;margin-bottom:10px;
+    color:var(--ink);
+    transition:color .2s;
+  }
+  .post-card-title .it{font-style:italic;color:var(--coral-dark)}
+  .post-card-snippet{
+    font-size:.97rem;line-height:1.55;color:var(--ink-soft);
+    font-weight:400;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .post-card-time{
+    font-size:11px;color:var(--ink-mute);font-weight:500;
+    letter-spacing:.05em;text-transform:uppercase;
+    font-family:'JetBrains Mono',monospace;
+    white-space:nowrap;
+    padding-top:4px;
+  }
+
+  /* FEATURED INDICATOR (if want to mark a starred post) */
+  .post-card.featured .post-card-title::before{
+    content:"★ ";
+    color:var(--coral);
+    font-size:.85em;
+  }
+
+  /* EMPTY STATE (when filter has no results - hidden by default) */
+  .empty-state{
+    text-align:center;
+    padding:80px 0;
+    color:var(--ink-mute);
+    display:none;
+  }
+
+  /* SITE FOOTER */
+  footer{
+    background:#0d0e10;
+    padding:32px 0;
+    border-top:1px solid var(--rule);
+  }
+  .footer-inner{
+    max-width:1120px;margin:0 auto;padding:0 48px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:13px;color:var(--ink-mute);
+  }
+  .footer-inner .accent{color:var(--coral);font-weight:600}
+
+  @media (max-width:640px){
+    .archive-wrap{padding:40px 20px 64px}
+    .archive-title{font-size:2.5rem}
+    .post-card{grid-template-columns:1fr;gap:8px;padding:24px 0}
+    .post-card-time{order:3;padding-top:0;margin-top:8px}
+    .post-card-title{font-size:1.3rem}
+    .footer-inner{flex-direction:column;gap:12px;text-align:center}
+    .nav-right a:not(.cv-btn):not(.social){display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="nav-container nav-inner">
+    <a href="#" class="logo"><span class="dot"></span>The Turing <span class="accent">Blog</span></a>
+    <div class="nav-right">
+      <a href="#">Home</a>
+      <a href="#" class="active">Writing</a>
+      <a href="#">Work</a>
+      <a href="#">About</a>
+      <span class="nav-sep"></span>
+      <a href="#" class="social" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+      </a>
+      <a href="#" class="social" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3v9zM6.5 8.25A1.75 1.75 0 1 1 6.5 4.75a1.75 1.75 0 0 1 0 3.5zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93-.83 0-1.62.62-1.62 1.97V19h-3v-9h2.9v1.3a3.11 3.11 0 0 1 2.7-1.4c1.55 0 3.4.86 3.4 3.8V19z"/></svg>
+      </a>
+      <a href="#" class="cv-btn">CV <span class="arr">↓</span></a>
+      <button class="lang-toggle">
+        <span class="active">EL</span><span>EN</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ARCHIVE -->
+<main class="archive-wrap">
+  <header class="archive-header">
+    <div class="archive-eyebrow">
+      <span>14 posts</span>
+      <span class="dot"></span>
+      <span>2024 — 2026</span>
+    </div>
+    <h1 class="archive-title">Writing<span class="it">.</span></h1>
+    <p class="archive-lede">Posts για compilers, side projects που δεν τέλειωσαν, διαγωνισμούς, και γενικά τα πράγματα που με κρατάνε ξύπνιο τη νύχτα.</p>
+  </header>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">filter:</span>
+    <button class="filter-pill active">All <span class="count">14</span></button>
+    <button class="filter-pill">project <span class="count">4</span></button>
+    <button class="filter-pill">competition <span class="count">2</span></button>
+    <button class="filter-pill">learning <span class="count">5</span></button>
+    <button class="filter-pill">life <span class="count">2</span></button>
+    <button class="filter-pill">notes <span class="count">1</span></button>
+  </div>
+
+  <!-- POST FEED -->
+  <div class="post-feed">
+
+    <a href="#" class="post-card featured">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>14 Φεβ 2026</span>
+          <span class="dot"></span>
+          <span class="tag">learning</span>
+        </div>
+        <h2 class="post-card-title">Γιατί έγραψα τον δικό μου <span class="it">compiler.</span></h2>
+        <p class="post-card-snippet">Για 4 μήνες έγραφα έναν compiler από το μηδέν, σε OCaml. Δεν λειτουργεί ακόμα. Αυτό είναι το γιατί — και τι έμαθα στα ενδιάμεσα.</p>
+      </div>
+      <span class="post-card-time">12 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>02 Φεβ 2026</span>
+          <span class="dot"></span>
+          <span class="tag">life</span>
+        </div>
+        <h2 class="post-card-title">Πέρασα 3 μήνες χτίζοντας κάτι που δεν θα το χρειαστεί κανείς</h2>
+        <p class="post-card-snippet">Έφτιαξα ένα tool για ένα πρόβλημα που μόνο εγώ είχα. Δεν το χρησιμοποίησε άλλος ποτέ. Και ναι, αυτό ήταν το point.</p>
+      </div>
+      <span class="post-card-time">6 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>21 Ιαν 2026</span>
+          <span class="dot"></span>
+          <span class="tag">notes</span>
+        </div>
+        <h2 class="post-card-title">Tiny rant: τα CS curriculums είναι λάθος (μάλλον)</h2>
+        <p class="post-card-snippet">Τέσσερα χρόνια μαθαίνεις θεωρία γραφημάτων. Δεν μαθαίνεις πώς να κάνεις deploy μια εφαρμογή. Συζητήσιμο.</p>
+      </div>
+      <span class="post-card-time">4 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>08 Ιαν 2026</span>
+          <span class="dot"></span>
+          <span class="tag">project</span>
+        </div>
+        <h2 class="post-card-title">Crowdless: ένας <span class="it">map</span> για ήσυχα μέρη στην Αθήνα</h2>
+        <p class="post-card-snippet">Side project σε Rust + WASM. Σε στέλνει σε όμορφα ήσυχα μέρη — όχι απλά ήσυχα. Πώς το έχτισα και γιατί.</p>
+      </div>
+      <span class="post-card-time">9 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>22 Δεκ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">learning</span>
+        </div>
+        <h2 class="post-card-title">Έμαθα Rust σε ένα μήνα. Δεν αξίζει το hype.</h2>
+        <p class="post-card-snippet">Spicy take ίσως. Ο borrow checker είναι έξυπνος αλλά κάνει το brain σου να καίγεται. Πότε αξίζει — και πότε όχι.</p>
+      </div>
+      <span class="post-card-time">7 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>03 Δεκ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">competition</span>
+        </div>
+        <h2 class="post-card-title">HackAthens '25: 48 ώρες, 3 άνθρωποι, 2η θέση</h2>
+        <p class="post-card-snippet">Ένα ML model που προβλέπει λάθος πράγματα με ύφος. Πώς το γράψαμε, τι πήγε στραβά, και γιατί κερδίσαμε ούτως ή άλλως.</p>
+      </div>
+      <span class="post-card-time">8 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>15 Νοε 2025</span>
+          <span class="dot"></span>
+          <span class="tag">learning</span>
+        </div>
+        <h2 class="post-card-title">Τι κατάλαβα γράφοντας μια JSON parser από το μηδέν</h2>
+        <p class="post-card-snippet">Σε C, χωρίς libraries. Πιο εύκολο απ' ό,τι νόμιζα — αλλά πιο ενδιαφέρον επίσης. Το recursion είναι μαγεία.</p>
+      </div>
+      <span class="post-card-time">5 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>28 Οκτ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">project</span>
+        </div>
+        <h2 class="post-card-title">Έφτιαξα ένα blog (αυτό που διαβάζεις) και έμαθα Next.js</h2>
+        <p class="post-card-snippet">Από το design στο deploy. MDX, custom components, γιατί δεν χρησιμοποίησα CMS, και πώς να γράφεις για τον εαυτό σου.</p>
+      </div>
+      <span class="post-card-time">11 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>09 Οκτ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">life</span>
+        </div>
+        <h2 class="post-card-title">Πώς να σπουδάζεις CS και να μην χάνεις την περιέργεια</h2>
+        <p class="post-card-snippet">Το πανεπιστήμιο σε διδάσκει να βλέπεις τα πάντα ως homework. Spoiler: δεν είναι.</p>
+      </div>
+      <span class="post-card-time">6 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>22 Σεπ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">project</span>
+        </div>
+        <h2 class="post-card-title">Έφτιαξα magazine site για το <span class="it">HeyPeach</span> — case study</h2>
+        <p class="post-card-snippet">Sanity CMS, Next.js, μια ομάδα editors που ήθελε να φοβάται τίποτα. Tech decisions, design tradeoffs, αποτέλεσμα.</p>
+      </div>
+      <span class="post-card-time">10 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>14 Σεπ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">learning</span>
+        </div>
+        <h2 class="post-card-title">Πώς λειτουργεί ένα <span class="it">database</span>, στην πραγματικότητα</h2>
+        <p class="post-card-snippet">B-trees, log-structured merge trees, MVCC. Έγραψα ένα toy database για να καταλάβω τι κάνει η Postgres κάτω από το hood.</p>
+      </div>
+      <span class="post-card-time">14 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>30 Αυγ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">competition</span>
+        </div>
+        <h2 class="post-card-title">ICPC regionals: τι μαθαίνεις χάνοντας</h2>
+        <p class="post-card-snippet">Δεν ήταν καλή χρονιά. Έγραψα 200 γραμμές κώδικα σε 5 ώρες και τίποτα δεν δούλεψε. Lessons learned.</p>
+      </div>
+      <span class="post-card-time">5 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>12 Αυγ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">learning</span>
+        </div>
+        <h2 class="post-card-title">Η ιστορία ενός bug που ψάχναμε 2 εβδομάδες</h2>
+        <p class="post-card-snippet">Ήταν race condition. Φυσικά ήταν race condition. Ποτέ δεν είναι κάτι άλλο.</p>
+      </div>
+      <span class="post-card-time">7 min</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-card-main">
+        <div class="post-card-meta">
+          <span>04 Αυγ 2025</span>
+          <span class="dot"></span>
+          <span class="tag">project</span>
+        </div>
+        <h2 class="post-card-title">gkiafis.gr: ένα freelance side hustle, εξηγημένο</h2>
+        <p class="post-card-snippet">Πώς ένας 20χρονος βρίσκει clients, τιμολογεί, και δεν παίρνει advantage of him. Spoiler: αρχικά παίρνανε.</p>
+      </div>
+      <span class="post-card-time">8 min</span>
+    </a>
+
+  </div>
+
+  <div class="empty-state">
+    <p>No posts match this filter yet.</p>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 Αλέξανδρος Γκιάφης</span>
+    <span>Built with <span class="accent">Next.js</span> · Hosted on <span class="accent">Vercel</span></span>
+  </div>
+</footer>
+
+</body>
+</html>

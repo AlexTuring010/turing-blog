@@ -1,26 +1,62 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ─── */
+/* Palette per CLAUDE.md. The variable is named --coral for historical reasons
+   (palette went through coral → green); keep the name stable so we can re-tone
+   the accent later without renaming every reference. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #15171a;
+  --paper-2: #1f2227;
+  --paper-3: #2a2e34;
+  --ink: #f0ebe0;
+  --ink-soft: #bfb8a8;
+  --ink-mute: #7a7568;
+  --rule: #3a3e46;
+  --coral: #87cf40;
+  --coral-dark: #9eda5c;
+  --footer: #0d0e10;
 }
 
+/* Map design tokens into Tailwind v4's theme so utilities like
+   `bg-paper`, `text-ink`, `border-rule`, `font-display` are generated. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-3: var(--paper-3);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-rule: var(--rule);
+  --color-coral: var(--coral);
+  --color-coral-dark: var(--coral-dark);
+  --color-footer: var(--footer);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-logo: var(--font-bowlby), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The signature italic-green emphasis used inside titles and prose. */
+.it {
+  font-style: italic;
+  color: var(--coral);
+}
+
+/* Display headings opt into the wider optical-size axis. */
+.font-display {
+  font-variation-settings: "opsz" 96;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.15); }
 }

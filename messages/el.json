@@ -1,0 +1,10 @@
+{
+  "phase0": {
+    "title": "Phase 0 — εκκίνηση.",
+    "subtitle": "Το scaffold τρέχει. Fonts, χρώματα, locales — όλα στη θέση τους.",
+    "tokensHeading": "Design tokens",
+    "fontsHeading": "Fonts",
+    "localeLabel": "Τρέχον locale",
+    "switchLabel": "Δες το EN"
+  }
+}

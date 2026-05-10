@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work — The Turing Blog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Bowlby+One&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#15171a;
+    --paper-2:#1f2227;
+    --paper-3:#2a2e34;
+    --ink:#f0ebe0;
+    --ink-soft:#bfb8a8;
+    --ink-mute:#7a7568;
+    --rule:#3a3e46;
+    --coral:#87CF40;
+    --coral-dark:#9eda5c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+    font-size:16px;line-height:1.55;
+    font-variation-settings:"opsz" 14;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--coral);color:var(--paper)}
+
+  /* NAV */
+  nav.top{
+    padding:18px 0;border-bottom:1px solid var(--rule);
+    position:sticky;top:0;background:rgba(21,23,26,.92);backdrop-filter:blur(8px);z-index:100;
+  }
+  .nav-container{max-width:1120px;margin:0 auto;padding:0 48px}
+  .nav-inner{display:flex;justify-content:space-between;align-items:center}
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Bowlby One',sans-serif;
+    font-size:1.15rem;line-height:1;letter-spacing:.01em;
+    text-decoration:none;color:var(--ink);
+  }
+  .logo .dot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex-shrink:0}
+  .logo .accent{color:var(--coral)}
+  .nav-right{display:flex;gap:18px;align-items:center;font-size:14px;font-weight:500}
+  .nav-right a{transition:color .2s;position:relative;color:var(--ink)}
+  .nav-right a:hover{color:var(--coral)}
+  .nav-right a.active{color:var(--coral)}
+  .nav-right a.active::after{
+    content:"";position:absolute;left:0;right:0;bottom:-22px;height:3px;background:var(--coral);
+  }
+  .nav-sep{width:1px;height:18px;background:var(--rule);margin:0 4px}
+  .nav-right a.social{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:32px;height:32px;border-radius:50%;color:var(--ink-soft);
+    transition:color .2s, background .2s;
+  }
+  .nav-right a.social:hover{color:var(--coral);background:var(--paper-2)}
+  .nav-right a.social::after{display:none}
+  .nav-right a.cv-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:6px 12px;border-radius:999px;
+    border:1.5px solid var(--coral);
+    color:var(--ink);font-size:13px;font-weight:600;letter-spacing:.02em;
+  }
+  .nav-right a.cv-btn:hover{background:var(--coral);color:var(--paper)}
+  .nav-right a.cv-btn::after{display:none}
+  .nav-right a.cv-btn .arr{font-size:11px;font-weight:700}
+  .lang-toggle{
+    display:flex;background:var(--paper-2);border:1px solid var(--rule);
+    border-radius:999px;padding:3px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;
+  }
+  .lang-toggle span{padding:3px 10px;border-radius:999px;color:var(--ink-mute)}
+  .lang-toggle span.active{background:var(--coral);color:var(--paper)}
+
+  /* PAGE WRAP */
+  .work-wrap{max-width:1120px;margin:0 auto;padding:64px 48px 96px}
+
+  /* PAGE HEADER */
+  .work-header{margin-bottom:48px;max-width:720px}
+  .work-eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-size:13px;color:var(--ink-mute);font-weight:500;
+    margin-bottom:16px;letter-spacing:.02em;text-transform:uppercase;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .work-eyebrow .dot{width:3px;height:3px;border-radius:50%;background:var(--ink-mute);flex-shrink:0}
+  .work-title{
+    font-size:clamp(2.5rem,6vw,4rem);line-height:1;
+    font-weight:800;font-variation-settings:"opsz" 96;
+    letter-spacing:-.02em;margin-bottom:16px;
+  }
+  .work-title .it{font-style:italic;color:var(--coral-dark);font-weight:700}
+  .work-lede{
+    font-size:1.1rem;line-height:1.5;color:var(--ink-soft);
+    font-weight:500;
+  }
+
+  /* FILTER BAR */
+  .filter-bar{
+    display:flex;gap:8px;flex-wrap:wrap;
+    padding:16px 0;margin-bottom:32px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    align-items:center;
+  }
+  .filter-label{
+    font-size:11px;color:var(--ink-mute);
+    letter-spacing:.05em;text-transform:uppercase;font-weight:600;
+    margin-right:8px;font-family:'JetBrains Mono',monospace;
+  }
+  .filter-pill{
+    font-size:13px;font-weight:600;
+    padding:6px 14px;border-radius:999px;
+    border:1.5px solid var(--rule);
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:all .2s;
+    background:transparent;
+    font-family:inherit;
+  }
+  .filter-pill:hover{border-color:var(--coral);color:var(--ink)}
+  .filter-pill.active{
+    background:var(--coral);border-color:var(--coral);color:var(--paper);
+  }
+  .filter-pill .count{
+    font-family:'JetBrains Mono',monospace;
+    opacity:.6;font-size:11px;margin-left:6px;
+  }
+
+  /* WORK GRID */
+  .work-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:32px;
+  }
+
+  .work-card{
+    display:flex;flex-direction:column;
+    background:var(--paper-2);
+    border:1.5px solid var(--rule);
+    border-radius:14px;
+    overflow:hidden;
+    transition:transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .work-card:hover{
+    transform:translate(-3px,-3px);
+    box-shadow:6px 6px 0 var(--coral);
+    border-color:var(--coral);
+  }
+
+  /* COVER */
+  .work-cover{
+    position:relative;
+    aspect-ratio:16/9;
+    background:var(--paper-3);
+    overflow:hidden;
+    border-bottom:1.5px solid var(--rule);
+  }
+  .work-cover .cover-bg{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.8rem;color:var(--ink-mute);
+    letter-spacing:.1em;text-transform:uppercase;
+  }
+  /* Generated cover styles - using gradient backgrounds since no real images yet */
+  .cover-crowdless{background:linear-gradient(135deg,#1a3a2a 0%,#0d1f15 50%,#1a3a2a 100%)}
+  .cover-crowdless::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 30% 40%,rgba(135,207,64,.4) 0%,transparent 30%),
+      radial-gradient(circle at 70% 60%,rgba(135,207,64,.3) 0%,transparent 25%),
+      radial-gradient(circle at 50% 80%,rgba(135,207,64,.2) 0%,transparent 20%);
+  }
+  .cover-hackathens{background:linear-gradient(180deg,#2a1f3a 0%,#15101f 100%)}
+  .cover-hackathens::before{
+    content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(0deg,
+      transparent 0,transparent 18px,rgba(135,207,64,.08) 18px,rgba(135,207,64,.08) 19px);
+  }
+  .cover-mucompiler{background:#0f1115;font-family:'JetBrains Mono',monospace}
+  .cover-mucompiler::before{
+    content:"let rec eval = function | Int n -> n";
+    position:absolute;top:30%;left:32px;
+    color:rgba(135,207,64,.5);font-size:.85rem;
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:0;text-transform:none;
+  }
+  .cover-mucompiler::after{
+    content:"| Add (a,b) -> eval a + eval b";
+    position:absolute;top:48%;left:32px;
+    color:rgba(192,184,168,.4);font-size:.85rem;
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:0;text-transform:none;
+  }
+  .cover-heypeach{background:linear-gradient(135deg,#3a2a1f 0%,#1f1510 100%)}
+  .cover-heypeach::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 25% 35%,rgba(255,180,140,.4) 0%,transparent 35%),
+      radial-gradient(circle at 75% 65%,rgba(255,140,160,.3) 0%,transparent 30%);
+  }
+  .cover-gkiafis{background:#15171a}
+  .cover-gkiafis::before{
+    content:"";position:absolute;inset:0;
+    background:
+      linear-gradient(90deg,transparent 0%,transparent 49%,rgba(135,207,64,.2) 49%,rgba(135,207,64,.2) 51%,transparent 51%,transparent 100%),
+      linear-gradient(0deg,transparent 0%,transparent 49%,rgba(135,207,64,.2) 49%,rgba(135,207,64,.2) 51%,transparent 51%,transparent 100%);
+    background-size:60px 60px;
+  }
+  .cover-blog{background:linear-gradient(135deg,#1a2a1f 0%,#0d1714 100%)}
+  .cover-blog::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 50% 50%,rgba(135,207,64,.3) 0%,transparent 50%);
+  }
+
+  /* Status badge on cover */
+  .work-status{
+    position:absolute;top:14px;left:14px;
+    display:inline-flex;align-items:center;gap:6px;
+    padding:5px 11px;
+    background:rgba(13,14,16,.85);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--rule);
+    border-radius:999px;
+    font-size:11px;font-weight:600;
+    color:var(--ink-soft);
+    letter-spacing:.02em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .work-status .pulse{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--coral);
+  }
+  .work-status.live .pulse{
+    animation:pulse 2s ease-in-out infinite;
+  }
+  .work-status.wip .pulse{background:#fbbf24}
+  .work-status.archived .pulse{background:var(--ink-mute)}
+  .work-status.award{
+    border-color:var(--coral);color:var(--coral);
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(135,207,64,.5)}
+    50%{opacity:.7;box-shadow:0 0 0 6px rgba(135,207,64,0)}
+  }
+
+  /* Project number on cover */
+  .work-num{
+    position:absolute;bottom:14px;right:14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.7rem;color:var(--ink-mute);
+    letter-spacing:.1em;
+    background:rgba(13,14,16,.7);
+    padding:4px 10px;border-radius:6px;
+    border:1px solid var(--rule);
+  }
+
+  /* CARD CONTENT */
+  .work-content{
+    padding:24px 26px 22px;
+    display:flex;flex-direction:column;gap:14px;
+    flex:1;
+  }
+  .work-card-title{
+    font-size:1.5rem;line-height:1.15;
+    font-weight:800;font-variation-settings:"opsz" 64;
+    letter-spacing:-.01em;
+    color:var(--ink);
+  }
+  .work-card-title .it{font-style:italic;color:var(--coral-dark);font-weight:700}
+  .work-card-tagline{
+    font-size:.95rem;line-height:1.5;color:var(--ink-soft);
+    font-weight:400;
+  }
+
+  /* Stack chips */
+  .work-stack{
+    display:flex;gap:6px;flex-wrap:wrap;
+    margin-top:auto;padding-top:6px;
+  }
+  .work-stack .chip{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;font-weight:500;
+    padding:3px 9px;
+    border:1px solid var(--rule);
+    border-radius:6px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    letter-spacing:.02em;
+  }
+
+  /* Card actions */
+  .work-actions{
+    display:flex;gap:14px;align-items:center;
+    padding:14px 26px;
+    border-top:1px solid var(--rule);
+    background:var(--paper);
+    font-size:13px;font-weight:600;
+  }
+  .work-actions .primary{
+    color:var(--ink);
+    display:inline-flex;align-items:center;gap:5px;
+    transition:color .2s, gap .2s;
+  }
+  .work-actions .primary:hover{color:var(--coral);gap:8px}
+  .work-actions .ext{
+    margin-left:auto;
+    color:var(--ink-mute);
+    display:inline-flex;align-items:center;gap:5px;
+    transition:color .2s;
+  }
+  .work-actions .ext:hover{color:var(--coral)}
+  .work-actions .sep{color:var(--rule)}
+
+  /* SITE FOOTER */
+  footer{
+    background:#0d0e10;
+    padding:32px 0;
+    border-top:1px solid var(--rule);
+  }
+  .footer-inner{
+    max-width:1120px;margin:0 auto;padding:0 48px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:13px;color:var(--ink-mute);
+  }
+  .footer-inner .accent{color:var(--coral);font-weight:600}
+
+  @media (max-width:768px){
+    .work-grid{grid-template-columns:1fr;gap:24px}
+    .work-wrap{padding:40px 20px 64px}
+    .work-title{font-size:2.5rem}
+    .footer-inner{flex-direction:column;gap:12px;text-align:center}
+    .nav-right a:not(.cv-btn):not(.social){display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="nav-container nav-inner">
+    <a href="#" class="logo"><span class="dot"></span>The Turing <span class="accent">Blog</span></a>
+    <div class="nav-right">
+      <a href="#">Home</a>
+      <a href="#">Writing</a>
+      <a href="#" class="active">Work</a>
+      <a href="#">About</a>
+      <span class="nav-sep"></span>
+      <a href="#" class="social" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+      </a>
+      <a href="#" class="social" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3v9zM6.5 8.25A1.75 1.75 0 1 1 6.5 4.75a1.75 1.75 0 0 1 0 3.5zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93-.83 0-1.62.62-1.62 1.97V19h-3v-9h2.9v1.3a3.11 3.11 0 0 1 2.7-1.4c1.55 0 3.4.86 3.4 3.8V19z"/></svg>
+      </a>
+      <a href="#" class="cv-btn">CV <span class="arr">↓</span></a>
+      <button class="lang-toggle">
+        <span class="active">EL</span><span>EN</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- WORK ARCHIVE -->
+<main class="work-wrap">
+  <header class="work-header">
+    <div class="work-eyebrow">
+      <span>6 projects</span>
+      <span class="dot"></span>
+      <span>2024 — 2026</span>
+    </div>
+    <h1 class="work-title">Work<span class="it">.</span></h1>
+    <p class="work-lede">Projects που δουλεύω, projects που τέλειωσα, και projects που <em style="font-style:italic">τυπικά</em> τέλειωσαν αλλά πάντα κάτι έχουν να φτιαχτεί ακόμα.</p>
+  </header>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">filter:</span>
+    <button class="filter-pill active">All <span class="count">6</span></button>
+    <button class="filter-pill">side project <span class="count">3</span></button>
+    <button class="filter-pill">freelance <span class="count">2</span></button>
+    <button class="filter-pill">competition <span class="count">1</span></button>
+  </div>
+
+  <!-- WORK GRID -->
+  <div class="work-grid">
+
+    <!-- Crowdless -->
+    <article class="work-card">
+      <div class="work-cover cover-crowdless">
+        <span class="work-status live">
+          <span class="pulse"></span>
+          <span>LIVE</span>
+        </span>
+        <span class="work-num">№ 01 · 2026</span>
+      </div>
+      <div class="work-content">
+        <h2 class="work-card-title">Crowd<span class="it">less</span></h2>
+        <p class="work-card-tagline">Σε στέλνει σε όμορφα ήσυχα μέρη — όχι απλά ήσυχα. Hidden gems map για την Αθήνα.</p>
+        <div class="work-stack">
+          <span class="chip">rust</span>
+          <span class="chip">wasm</span>
+          <span class="chip">leaflet</span>
+          <span class="chip">postgis</span>
+        </div>
+      </div>
+      <div class="work-actions">
+        <a href="#" class="primary">Case study →</a>
+        <a href="#" class="ext">Live ↗</a>
+        <span class="sep">·</span>
+        <a href="#" class="ext">GitHub ↗</a>
+      </div>
+    </article>
+
+    <!-- HackAthens -->
+    <article class="work-card">
+      <div class="work-cover cover-hackathens">
+        <span class="work-status award">
+          <span class="pulse"></span>
+          <span>2ND PLACE</span>
+        </span>
+        <span class="work-num">№ 02 · 2025</span>
+      </div>
+      <div class="work-content">
+        <h2 class="work-card-title">Hack<span class="it">athens</span> '25</h2>
+        <p class="work-card-tagline">48 ώρες, 3 άνθρωποι, ένα ML model που προβλέπει λάθος πράγματα με ύφος.</p>
+        <div class="work-stack">
+          <span class="chip">python</span>
+          <span class="chip">fastapi</span>
+          <span class="chip">pytorch</span>
+          <span class="chip">react</span>
+        </div>
+      </div>
+      <div class="work-actions">
+        <a href="#" class="primary">Case study →</a>
+        <a href="#" class="ext">GitHub ↗</a>
+      </div>
+    </article>
+
+    <!-- μ-compiler -->
+    <article class="work-card">
+      <div class="work-cover cover-mucompiler">
+        <span class="work-status wip">
+          <span class="pulse"></span>
+          <span>WIP</span>
+        </span>
+        <span class="work-num">№ 03 · 2025</span>
+      </div>
+      <div class="work-content">
+        <h2 class="work-card-title">μ-<span class="it">compiler</span></h2>
+        <p class="work-card-tagline">Compiler από το μηδέν, σε OCaml. Δεν λειτουργεί ακόμα. Αλλά μαθαίνω.</p>
+        <div class="work-stack">
+          <span class="chip">ocaml</span>
+          <span class="chip">llvm</span>
+          <span class="chip">dune</span>
+        </div>
+      </div>
+      <div class="work-actions">
+        <a href="#" class="primary">Case study →</a>
+        <a href="#" class="ext">GitHub ↗</a>
+      </div>
+    </article>
+
+    <!-- HeyPeach -->
+    <article class="work-card">
+      <div class="work-cover cover-heypeach">
+        <span class="work-status live">
+          <span class="pulse"></span>
+          <span>LIVE</span>
+        </span>
+        <span class="work-num">№ 04 · 2025</span>
+      </div>
+      <div class="work-content">
+        <h2 class="work-card-title">Hey<span class="it">Peach</span> Magazine</h2>
+        <p class="work-card-tagline">Magazine site για ομάδα editors. Sanity CMS + Next.js, custom design system.</p>
+        <div class="work-stack">
+          <span class="chip">nextjs</span>
+          <span class="chip">sanity</span>
+          <span class="chip">tailwind</span>
+          <span class="chip">vercel</span>
+        </div>
+      </div>
+      <div class="work-actions">
+        <a href="#" class="primary">Case study →</a>
+        <a href="#" class="ext">Live ↗</a>
+      </div>
+    </article>
+
+    <!-- gkiafis.gr -->
+    <article class="work-card">
+      <div class="work-cover cover-gkiafis">
+        <span class="work-status live">
+          <span class="pulse"></span>
+          <span>LIVE</span>
+        </span>
+        <span class="work-num">№ 05 · 2024</span>
+      </div>
+      <div class="work-content">
+        <h2 class="work-card-title">gkiafis<span class="it">.gr</span></h2>
+        <p class="work-card-tagline">Freelance services landing page. Πρώτο μου production deploy.</p>
+        <div class="work-stack">
+          <span class="chip">astro</span>
+          <span class="chip">typescript</span>
+          <span class="chip">cloudflare</span>
+        </div>
+      </div>
+      <div class="work-actions">
+        <a href="#" class="primary">Case study →</a>
+        <a href="#" class="ext">Live ↗</a>
+      </div>
+    </article>
+
+    <!-- The Turing Blog (this site) -->
+    <article class="work-card">
+      <div class="work-cover cover-blog">
+        <span class="work-status live">
+          <span class="pulse"></span>
+          <span>YOU ARE HERE</span>
+        </span>
+        <span class="work-num">№ 06 · 2026</span>
+      </div>
+      <div class="work-content">
+        <h2 class="work-card-title">The Turing <span class="it">Blog</span></h2>
+        <p class="work-card-tagline">Αυτό που διαβάζεις τώρα. Custom design, MDX posts, hand-tuned για loading speed.</p>
+        <div class="work-stack">
+          <span class="chip">nextjs</span>
+          <span class="chip">mdx</span>
+          <span class="chip">tailwind</span>
+          <span class="chip">vercel</span>
+        </div>
+      </div>
+      <div class="work-actions">
+        <a href="#" class="primary">Case study →</a>
+        <a href="#" class="ext">GitHub ↗</a>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 Αλέξανδρος Γκιάφης</span>
+    <span>Built with <span class="accent">Next.js</span> · Hosted on <span class="accent">Vercel</span></span>
+  </div>
+</footer>
+
+</body>
+</html>
