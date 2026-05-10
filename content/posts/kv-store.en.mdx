@@ -1,0 +1,84 @@
+---
+title: "Why I wrote my own *key-value store*"
+description: "Not because I needed to. Because I wanted to understand **what Redis does** when I'm not looking at it."
+date: "2026-05-02"
+tags: ["project", "learning"]
+readingTime: 12
+featured: true
+---
+
+I didn't want to build a key-value store. I wanted to understand what Redis does when I'm not looking at it.
+
+It's a different thing. When you read the docs you learn words like _hash table_, _LRU eviction_, _persistence_, _replication_. You know what they mean in the sense that you can write them on an exam. But you don't know _how they work_.
+
+For example: the `SET key value` you run thousands of times a day. How is it stored? Where? What happens when memory runs out? I knew the phrase "eviction policy" but it didn't actually explain _anything_.
+
+So I started.
+
+## Why not just use a library
+
+I chose to write it from scratch, in C, because the goal wasn't to _have_ a kv-store. It was to _understand_ one. Different job.
+
+The core insight is that a kv-store is, at its heart, a global dictionary with a wire protocol on top. You can build that with two things: a hash table and a socket loop.
+
+```c
+typedef struct entry {
+    char *key;
+    char *value;
+    struct entry *next;  // chaining for collisions
+} entry_t;
+
+typedef struct {
+    entry_t **buckets;
+    size_t cap;
+    size_t size;
+} table_t;
+```
+
+That's the whole store. Seriously. Every fancy feature — TTL, persistence, replication — is built on top of this.
+
+<Callout>
+**Side note:** I tried Rust first. The borrow checker added so much noise during learning that I lost the plot. C lets you think about the problem, not the memory model.
+</Callout>
+
+## The first wall
+
+The event loop. I was stuck for _three weeks_.
+
+Every tutorial online starts with:
+
+```
+fd = accept(server)
+read(fd, buf)
+process(buf)
+write(fd, response)
+close(fd)
+```
+
+And says "the server just follows this flow." OK. But _how_ do you handle 1000 concurrent clients? Threads? `fork()`? `select()`?
+
+### The insight
+
+When I finally understood `epoll`, I felt stupid. It's this:
+
+- You tell the kernel "watch these 1000 sockets for me"
+- When one is ready to read/write, the kernel tells you
+- You never block
+
+There's no trick. The event loop _is_ a `while(1) { wait_for_events(); handle_them(); }` — and that's all.
+
+> The beauty is, once you write it, the mental model and the code are nearly 1:1. The server is a live translation of "give me whatever's ready and I'll handle it."
+
+## What I've learned
+
+Two things, so far:
+
+**First:** Books show you the concepts, but they don't give you intuition. You get intuition by writing your own, failing, and trying again.
+
+**Second:** The hard problems aren't what I thought they'd be. I expected advanced data structures. But 80% of the time is boring stuff: error handling, partial reads, graceful shutdown. The algorithmic part is the easy part.
+
+---
+
+My kv-store now does `GET`, `SET`, `DEL`, `EXPIRE`, and a minimal RESP-like protocol. No persistence. No replication. Not production-ready.
+
+But I _really_ understand how Redis works now. And that was worth it.

@@ -79,5 +79,23 @@
     "learning": "learning",
     "life": "life",
     "notes": "notes"
+  },
+  "post": {
+    "backToWriting": "Πίσω στο writing",
+    "minutes": "λεπτά",
+    "approxPrefix": "~",
+    "authorName": "Αλέξανδρος Γκιάφης",
+    "authorMeta": "CS student · Athens",
+    "prevLabel": "← Προηγούμενο",
+    "nextLabel": "Επόμενο →",
+    "missing": {
+      "eyebrow": "— Δεν έχει μεταφραστεί ακόμα",
+      "body": "Αυτό το post είναι διαθέσιμο μόνο στα <locale></locale>.",
+      "ctaPrefix": "Διάβασέ το στα",
+      "localeName": {
+        "el": "Ελληνικά",
+        "en": "Αγγλικά"
+      }
+    }
   }
 }

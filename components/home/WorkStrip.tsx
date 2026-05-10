@@ -42,7 +42,7 @@ export function WorkStrip() {
               </h3>
 
               <p className="text-[0.95rem] font-medium leading-[1.45] text-ink-soft">
-                {p.tagline}
+                {p.description}
               </p>
 
               <span className="self-end text-[1.4rem] font-bold text-coral-dark transition-transform duration-200 group-hover:translate-x-1 group-hover:text-coral">

@@ -1,8 +1,9 @@
 // Domain types for posts and projects.
 //
-// Titles and descriptions can include `*word*` markers — these render as
-// italic + coral-dark emphasis via <RichText/>. The convention matches what
-// MDX frontmatter strings will use in Phase 2 (YAML strings can't carry JSX).
+// Inline emphasis: titles and descriptions can include `*word*` markers — these
+// render as italic + coral-dark via <RichText/>. The convention matches what
+// MDX frontmatter strings can carry (YAML can't hold JSX) and what mock content
+// used in Phase 1.
 
 import type { Locale } from "@/i18n/routing";
 
@@ -15,42 +16,45 @@ export type PostTag =
 
 export type ProjectStatus = "live" | "wip" | "archived" | "award";
 
-export type ProjectTag = "side-project" | "freelance" | "competition";
+export type ProjectLinks = {
+  live?: string;
+  github?: string;
+};
 
-export type CoverColor =
-  | "c-mint"
-  | "c-coral"
-  | "c-butter"
-  | "c-dark"
-  | "c-mix"
-  | "c-pattern";
-
-export type Cover =
-  | { kind: "color"; tone: CoverColor; deco?: string; decoColor?: string }
-  | { kind: "image"; src: string };
-
-export type Post = {
-  slug: string;
-  locale: Locale;
+// What lives in the YAML frontmatter at the top of each MDX file.
+export type PostFrontmatter = {
   title: string;
   description: string;
-  date: string; // ISO 8601
+  date: string; // ISO 8601 (YYYY-MM-DD)
   tags: PostTag[];
   readingTime: number;
   featured?: boolean;
-  cover?: Cover;
+  cover?: string; // path to /public/covers/X
 };
 
-export type Project = {
-  slug: string;
-  locale: Locale;
+export type ProjectFrontmatter = {
   title: string;
-  tagline: string;
+  description: string;
   year: number;
   status: ProjectStatus;
-  statusLabel: string;
+  statusLabel: string; // localized
   stack: string[];
-  links?: { live?: string; github?: string };
+  links?: ProjectLinks;
   order: number;
   cover?: string;
 };
+
+// Frontmatter + the bits we derive from the file path.
+export type Post = PostFrontmatter & {
+  slug: string;
+  locale: Locale;
+};
+
+export type Project = ProjectFrontmatter & {
+  slug: string;
+  locale: Locale;
+};
+
+// Returned by `getPostBySlug` / `getProjectBySlug`: metadata + raw MDX body.
+export type PostWithBody = Post & { body: string };
+export type ProjectWithBody = Project & { body: string };

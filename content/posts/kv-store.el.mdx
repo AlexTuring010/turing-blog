@@ -1,0 +1,84 @@
+---
+title: "Γιατί έγραψα τον δικό μου *key-value store*"
+description: "Όχι επειδή χρειαζόταν. Επειδή ήθελα να καταλάβω **τι κάνει η Redis** όταν δεν την κοιτάζω."
+date: "2026-05-02"
+tags: ["project", "learning"]
+readingTime: 12
+featured: true
+---
+
+Δεν ήθελα να φτιάξω key-value store. Ήθελα να καταλάβω τι κάνει η Redis όταν δεν την κοιτάζω.
+
+Είναι διαφορετικό. Όταν διαβάζεις docs μαθαίνεις λέξεις σαν _hash table_, _LRU eviction_, _persistence_, _replication_. Ξέρεις τι σημαίνουν με την έννοια ότι μπορείς να τις γράψεις σε exam. Αλλά δεν ξέρεις _πώς γίνονται_.
+
+Για παράδειγμα: το `SET key value` που κάνεις χιλιάδες φορές την μέρα. Πώς αποθηκεύεται; Πού; Τι γίνεται αν τελειώσει η μνήμη; Ξέρω τη λέξη "eviction policy" αλλά αυτό δεν μου εξηγεί _τίποτα_.
+
+Έτσι ξεκίνησα.
+
+## Γιατί όχι έτοιμη βιβλιοθήκη
+
+Επέλεξα να γράψω από το μηδέν, σε C, γιατί ο στόχος δεν ήταν να _έχω_ ένα kv-store. Ήταν να _καταλάβω_ ένα. Διαφορετική δουλειά.
+
+Το βασικό insight είναι ότι ένα kv-store είναι, στον πυρήνα του, ένα παγκόσμιο dictionary με wire protocol από πάνω. Αυτό μπορείς να το χτίσεις με δύο πράγματα: ένα hash table και έναν socket loop.
+
+```c
+typedef struct entry {
+    char *key;
+    char *value;
+    struct entry *next;  // chaining for collisions
+} entry_t;
+
+typedef struct {
+    entry_t **buckets;
+    size_t cap;
+    size_t size;
+} table_t;
+```
+
+Αυτή είναι όλη η αποθήκη. Σοβαρά. Όλα τα fancy features — TTL, persistence, replication — χτίζονται πάνω σε αυτό.
+
+<Callout>
+**Side note:** Δοκίμασα να ξεκινήσω σε Rust πρώτα. Ο borrow checker ήταν τόσο πολύς "noise" κατά τη διάρκεια του learning, που έχασα την ουσία. Η C σε αφήνει να σκεφτείς το πρόβλημα, όχι το memory model.
+</Callout>
+
+## Το πρώτο τοίχος
+
+Ο event loop. Ήμουν stuck για _τρεις εβδομάδες_.
+
+Όλα τα tutorials online ξεκινούν με:
+
+```
+fd = accept(server)
+read(fd, buf)
+process(buf)
+write(fd, response)
+close(fd)
+```
+
+Και λένε "ο server απλώς ακολουθεί αυτή τη ροή." Εντάξει. Αλλά _πώς_ χειρίζεσαι 1000 ταυτόχρονα clients; Threads; `fork()`; `select()`?
+
+### Το insight
+
+Όταν κατάλαβα τι κάνει το `epoll`, ένιωσα stupid. Είναι αυτό:
+
+- Λες στο kernel "παρακολούθα μου αυτά τα 1000 sockets"
+- Όταν ένα είναι έτοιμο για read/write, το kernel σου το λέει
+- Δεν blockάρεις ποτέ
+
+Δεν υπάρχει trick. Ο event loop _είναι_ μια `while(1) { wait_for_events(); handle_them(); }` — και αυτό είναι όλο.
+
+> Η ομορφιά είναι ότι όταν επιτέλους το γράφεις, το mental model και ο κώδικας είναι σχεδόν 1:1 αντιστοιχία. Ο server είναι ζωντανή μετάφραση του "δώσε μου ό,τι είναι έτοιμο, εγώ θα το χειριστώ".
+
+## Τι έχω μάθει
+
+Δύο πράγματα, μέχρι τώρα:
+
+**Πρώτο:** Τα books σου δείχνουν τα concepts, αλλά δεν σου δίνουν την intuition. Την παίρνεις γράφοντας τον δικό σου, αποτυγχάνοντας, και προσπαθώντας ξανά.
+
+**Δεύτερο:** Τα δύσκολα προβλήματα δεν είναι αυτά που νόμιζα. Νόμιζα θα έπρεπε να δουλέψω πάνω σε advanced data structures. Αλλά το 80% του χρόνου είναι σε boring stuff: error handling, partial reads, graceful shutdown. Το algorithmic part είναι το εύκολο.
+
+---
+
+Το kv-store μου τώρα κάνει `GET`, `SET`, `DEL`, `EXPIRE`, και ένα minimal RESP-like protocol. Δεν έχει persistence. Δεν έχει replication. Δεν είναι production-ready.
+
+Αλλά καταλαβαίνω _πραγματικά_ πώς δουλεύει η Redis. Και αυτό άξιζε.

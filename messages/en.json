@@ -79,5 +79,23 @@
     "learning": "learning",
     "life": "life",
     "notes": "notes"
+  },
+  "post": {
+    "backToWriting": "Back to writing",
+    "minutes": "min",
+    "approxPrefix": "~",
+    "authorName": "Alex Gkiafis",
+    "authorMeta": "CS student · Athens",
+    "prevLabel": "← Previous",
+    "nextLabel": "Next →",
+    "missing": {
+      "eyebrow": "— Not translated yet",
+      "body": "This post is only available in <locale></locale>.",
+      "ctaPrefix": "Read it in",
+      "localeName": {
+        "el": "Greek",
+        "en": "English"
+      }
+    }
   }
 }

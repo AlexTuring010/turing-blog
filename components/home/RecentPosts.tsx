@@ -16,14 +16,21 @@ const FILTER_TAGS: PostTag[] = [
   "notes",
 ];
 
-const COVER_TONE: Record<string, string> = {
-  "c-mint": "bg-paper-2",
-  "c-coral": "bg-coral",
-  "c-butter": "bg-paper-3",
-  "c-dark": "bg-[#0d0e10]",
-  "c-mix": "bg-paper-2",
-  "c-pattern": "bg-paper-3",
-};
+// Posts without an explicit cover image get one of these tinted backgrounds,
+// picked deterministically from the slug so each card is visually distinct
+// but the choice is stable across reloads.
+const FALLBACK_TONES = [
+  "bg-paper-2",
+  "bg-coral",
+  "bg-paper-3",
+  "bg-[#0d0e10]",
+] as const;
+
+function pickFallbackTone(slug: string): string {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+  return FALLBACK_TONES[h % FALLBACK_TONES.length];
+}
 
 export function RecentPosts() {
   const t = useTranslations("recent");
@@ -108,17 +115,12 @@ function PostCard({ post, locale }: { post: Post; locale: Locale }) {
   const format = useFormatter();
   const tTags = useTranslations("tags");
   const tFeatured = useTranslations("featured");
-  const cover =
-    post.cover?.kind === "color"
-      ? COVER_TONE[post.cover.tone] ?? "bg-paper-2"
-      : "bg-paper-2";
-  const deco = post.cover?.kind === "color" ? post.cover.deco : undefined;
-  const decoColor = post.cover?.kind === "color" ? post.cover.decoColor : undefined;
   const date = format.dateTime(new Date(post.date), {
     day: "2-digit",
     month: "short",
   });
   const primaryTag = post.tags[0];
+  const fallbackTone = pickFallbackTone(post.slug);
 
   return (
     <Link
@@ -128,24 +130,19 @@ function PostCard({ post, locale }: { post: Post; locale: Locale }) {
       <div
         className={
           "relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b-[1.5px] border-coral " +
-          cover
+          (post.cover ? "bg-paper-2" : fallbackTone)
         }
-      >
-        {deco && (
-          <span
-            className="text-[24px] font-bold"
-            style={
-              decoColor === "coral"
-                ? { color: "var(--coral)" }
-                : decoColor === "ink"
-                  ? { color: "var(--ink)" }
-                  : { color: "rgba(0,0,0,0.5)" }
-            }
-          >
-            {deco}
-          </span>
-        )}
-      </div>
+        style={
+          post.cover
+            ? {
+                backgroundImage: `url(${post.cover})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : undefined
+        }
+      />
+
       <div className="flex flex-1 flex-col gap-2 px-[22px] pb-[22px] pt-[18px]">
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.04em] text-ink-mute">
           {primaryTag && (
