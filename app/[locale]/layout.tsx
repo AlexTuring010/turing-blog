@@ -4,6 +4,8 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { Nav } from "@/components/nav/Nav";
+import { Footer } from "@/components/footer/Footer";
 import "../globals.css";
 
 // Bricolage Grotesque on Google Fonts ships latin + latin-ext + vietnamese only
@@ -53,7 +55,11 @@ export default async function LocaleLayout({
       className={`${bricolage.variable} ${bowlby.variable} ${jetbrains.variable}`}
     >
       <body className="min-h-screen bg-paper text-ink antialiased">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Nav />
+          {children}
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

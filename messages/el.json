@@ -1,10 +1,83 @@
 {
-  "phase0": {
-    "title": "Phase 0 — εκκίνηση.",
-    "subtitle": "Το scaffold τρέχει. Fonts, χρώματα, locales — όλα στη θέση τους.",
-    "tokensHeading": "Design tokens",
-    "fontsHeading": "Fonts",
-    "localeLabel": "Τρέχον locale",
-    "switchLabel": "Δες το EN"
+  "nav": {
+    "home": "Home",
+    "writing": "Writing",
+    "work": "Work",
+    "about": "About",
+    "cv": "CV",
+    "githubLabel": "GitHub",
+    "linkedinLabel": "LinkedIn"
+  },
+  "hero": {
+    "eyebrowGreeting": "Hi,",
+    "eyebrowName": "είμαι ο Αλεξ.",
+    "titleLine1Pre": "Φτιάχνω ",
+    "titleLine1It": "πράγματα,",
+    "titleLine2Pre": " και ",
+    "titleLine2Coral": "γράφω",
+    "titleLine2Post": " για αυτά.",
+    "lede": "Φοιτητής CS στην Αθήνα, freelance web dev, και κάποιος που *δεν αντέχει* να μην καταλάβει πώς δουλεύουν τα πράγματα από κάτω.",
+    "statusLabel": "Available for internship ·",
+    "statusValue": "Sept 2026",
+    "ctaPrimary": "Διάβασε posts",
+    "ctaGhost": "Πες ένα *γεια*",
+    "photoAlt": "Αλέξανδρος Γκιάφης"
+  },
+  "featured": {
+    "num": "01",
+    "title": "Featured *post.*",
+    "meta": "— most recent build log",
+    "pillFeatured": "★ featured",
+    "byAuthor": "By Αλέξανδρος",
+    "minRead": "min read"
+  },
+  "recent": {
+    "num": "02",
+    "title": "Recent *writing.*",
+    "metaSuffix": "in archive",
+    "filterAll": "all",
+    "viewAllPrefix": "view all",
+    "viewAllSuffix": "posts"
+  },
+  "work": {
+    "num": "03",
+    "title": "Selected *work.*",
+    "meta": "— 3 of many"
+  },
+  "about": {
+    "eyebrow": "— About me",
+    "body": "Σπουδάζω CS στην Αθήνα και φτιάχνω custom websites για ελληνικές επιχειρήσεις. Στον ελεύθερό μου χρόνο γράφω *compilers που δεν λειτουργούν.*",
+    "readMore": "read full about",
+    "avatarAlt": "Αλέξανδρος Γκιάφης"
+  },
+  "newsletter": {
+    "title": "Get new *posts* in your inbox.",
+    "body": "Μια φορά τον μήνα. Δεν θα σου στείλω σπαμ — δεν είμαι αρκετά οργανωμένος για σπαμ.",
+    "placeholder": "your@email.com",
+    "submit": "Subscribe",
+    "comingSoon": "soon ✦"
+  },
+  "footer": {
+    "brandName": "Αλέξανδρος",
+    "brandBlurb": "A notebook of projects, posts, and thoughts at 3am. Updated when there's something to say.",
+    "site": "Site",
+    "findMe": "Find me",
+    "colophon": "Colophon",
+    "colophonFont": "Set in Bricolage Grotesque",
+    "colophonStack": "Built in Next.js",
+    "colophonHost": "Hosted on Vercel",
+    "linkEmail": "Email",
+    "linkGitHub": "GitHub",
+    "linkLinkedIn": "LinkedIn",
+    "copyright": "© 2026 Αλέξανδρος Γκιάφης",
+    "location": "Athens, GR · UTC+3",
+    "version": "Built by hand · v.1.0"
+  },
+  "tags": {
+    "project": "project",
+    "competition": "competition",
+    "learning": "learning",
+    "life": "life",
+    "notes": "notes"
   }
 }

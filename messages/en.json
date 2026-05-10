@@ -1,10 +1,83 @@
 {
-  "phase0": {
-    "title": "Phase 0 — boot.",
-    "subtitle": "Scaffold runs. Fonts, colors, locales — all in place.",
-    "tokensHeading": "Design tokens",
-    "fontsHeading": "Fonts",
-    "localeLabel": "Current locale",
-    "switchLabel": "See EL"
+  "nav": {
+    "home": "Home",
+    "writing": "Writing",
+    "work": "Work",
+    "about": "About",
+    "cv": "CV",
+    "githubLabel": "GitHub",
+    "linkedinLabel": "LinkedIn"
+  },
+  "hero": {
+    "eyebrowGreeting": "Hi,",
+    "eyebrowName": "I'm Alex.",
+    "titleLine1Pre": "I build ",
+    "titleLine1It": "things,",
+    "titleLine2Pre": " and I ",
+    "titleLine2Coral": "write",
+    "titleLine2Post": " about them.",
+    "lede": "CS student in Athens, freelance web dev, and someone who *can't stand* not knowing how things work underneath.",
+    "statusLabel": "Available for internship ·",
+    "statusValue": "Sept 2026",
+    "ctaPrimary": "Read posts",
+    "ctaGhost": "Say *hi*",
+    "photoAlt": "Alex Gkiafis"
+  },
+  "featured": {
+    "num": "01",
+    "title": "Featured *post.*",
+    "meta": "— most recent build log",
+    "pillFeatured": "★ featured",
+    "byAuthor": "By Alex",
+    "minRead": "min read"
+  },
+  "recent": {
+    "num": "02",
+    "title": "Recent *writing.*",
+    "metaSuffix": "in archive",
+    "filterAll": "all",
+    "viewAllPrefix": "view all",
+    "viewAllSuffix": "posts"
+  },
+  "work": {
+    "num": "03",
+    "title": "Selected *work.*",
+    "meta": "— 3 of many"
+  },
+  "about": {
+    "eyebrow": "— About me",
+    "body": "CS student in Athens, building custom websites for Greek businesses. In my free time I write *compilers that don't work.*",
+    "readMore": "read full about",
+    "avatarAlt": "Alex Gkiafis"
+  },
+  "newsletter": {
+    "title": "Get new *posts* in your inbox.",
+    "body": "Once a month. I won't spam you — I'm not organised enough to spam.",
+    "placeholder": "your@email.com",
+    "submit": "Subscribe",
+    "comingSoon": "soon ✦"
+  },
+  "footer": {
+    "brandName": "Alex",
+    "brandBlurb": "A notebook of projects, posts, and thoughts at 3am. Updated when there's something to say.",
+    "site": "Site",
+    "findMe": "Find me",
+    "colophon": "Colophon",
+    "colophonFont": "Set in Bricolage Grotesque",
+    "colophonStack": "Built in Next.js",
+    "colophonHost": "Hosted on Vercel",
+    "linkEmail": "Email",
+    "linkGitHub": "GitHub",
+    "linkLinkedIn": "LinkedIn",
+    "copyright": "© 2026 Alex Gkiafis",
+    "location": "Athens, GR · UTC+3",
+    "version": "Built by hand · v.1.0"
+  },
+  "tags": {
+    "project": "project",
+    "competition": "competition",
+    "learning": "learning",
+    "life": "life",
+    "notes": "notes"
   }
 }
