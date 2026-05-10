@@ -80,6 +80,38 @@
     "life": "life",
     "notes": "notes"
   },
+  "writingArchive": {
+    "eyebrowSuffix": "posts",
+    "yearRange": "2024 — 2026",
+    "title": "Writing*.*",
+    "lede": "Posts about compilers, side projects that never shipped, competitions, and the things that keep me up at night.",
+    "filterLabel": "filter:",
+    "filterAll": "All",
+    "minutesShort": "min",
+    "emptyState": "No posts match this filter yet."
+  },
+  "workArchive": {
+    "eyebrowSuffix": "projects",
+    "yearRange": "2024 — 2026",
+    "title": "Work*.*",
+    "lede": "Projects I'm working on, projects I finished, and projects that are technically finished but somehow always have one more thing to fix.",
+    "filterLabel": "filter:",
+    "filterAll": "All",
+    "actionCaseStudy": "Case study",
+    "actionLive": "Live",
+    "actionGitHub": "GitHub"
+  },
+  "workCase": {
+    "backToWork": "Back to work",
+    "stackLabel": "stack",
+    "yearLabel": "year"
+  },
+  "status": {
+    "live": "LIVE",
+    "wip": "WIP",
+    "archived": "ARCHIVED",
+    "award": "AWARD"
+  },
   "post": {
     "backToWriting": "Back to writing",
     "minutes": "min",

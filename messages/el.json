@@ -80,6 +80,38 @@
     "life": "life",
     "notes": "notes"
   },
+  "writingArchive": {
+    "eyebrowSuffix": "posts",
+    "yearRange": "2024 — 2026",
+    "title": "Writing*.*",
+    "lede": "Posts για compilers, side projects που δεν τέλειωσαν, διαγωνισμούς, και γενικά τα πράγματα που με κρατάνε ξύπνιο τη νύχτα.",
+    "filterLabel": "filter:",
+    "filterAll": "All",
+    "minutesShort": "min",
+    "emptyState": "Δεν υπάρχουν posts με αυτό το filter."
+  },
+  "workArchive": {
+    "eyebrowSuffix": "projects",
+    "yearRange": "2024 — 2026",
+    "title": "Work*.*",
+    "lede": "Projects που δουλεύω, projects που τέλειωσα, και projects που τυπικά τέλειωσαν αλλά πάντα κάτι έχουν να φτιαχτεί ακόμα.",
+    "filterLabel": "filter:",
+    "filterAll": "All",
+    "actionCaseStudy": "Case study",
+    "actionLive": "Live",
+    "actionGitHub": "GitHub"
+  },
+  "workCase": {
+    "backToWork": "Πίσω στο work",
+    "stackLabel": "stack",
+    "yearLabel": "year"
+  },
+  "status": {
+    "live": "LIVE",
+    "wip": "WIP",
+    "archived": "ARCHIVED",
+    "award": "AWARD"
+  },
   "post": {
     "backToWriting": "Πίσω στο writing",
     "minutes": "λεπτά",
