@@ -27,7 +27,8 @@ export async function generateMetadata({
   const post = getPostBySlug(slug, locale as Locale);
   if (!post) return { title: slug };
   return {
-    title: `${plainTitle(post.title)} — The Turing Blog`,
+    // Brand suffix comes from the title.template in app/[locale]/layout.tsx.
+    title: plainTitle(post.title),
     description: post.description.replace(/\*+/g, ""),
   };
 }

@@ -39,6 +39,9 @@ yarn-error.log*
 # claude code (local-only state)
 .claude/settings.local.json
 
+# inbox archive — processed drafts kept locally for reference, not published
+/inbox/_archive/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -6,7 +6,9 @@
     "about": "About",
     "cv": "CV",
     "githubLabel": "GitHub",
-    "linkedinLabel": "LinkedIn"
+    "linkedinLabel": "LinkedIn",
+    "brand": "Alexander Gkiafis",
+    "brandAriaSuffix": "— Home"
   },
   "hero": {
     "eyebrowGreeting": "Hi,",

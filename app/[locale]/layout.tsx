@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Bowlby_One, JetBrains_Mono } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
 import "../globals.css";
@@ -31,10 +31,23 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "The Turing Blog",
-  description: "Personal site & blog of Αλέξανδρος Γκιάφης (Alex).",
-};
+export async function generateMetadata({
+  params,
+}: LayoutProps<"/[locale]">): Promise<Metadata> {
+  const { locale } = await params;
+  if (!routing.locales.includes(locale as Locale)) return {};
+  const t = await getTranslations({ locale, namespace: "nav" });
+  return {
+    title: {
+      default: t("brand"),
+      template: `%s — ${t("brand")}`,
+    },
+    description:
+      locale === "el"
+        ? "Προσωπικό site και blog του Αλέξανδρου Γκιάφη."
+        : "Personal site & blog of Alexander Gkiafis.",
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

@@ -21,10 +21,12 @@ export function Nav() {
         <Link
           href={home}
           className="font-logo flex items-center gap-2 text-[1.15rem] leading-none tracking-[0.01em] text-ink"
-          aria-label="The Turing Blog — Home"
+          aria-label={`${t("brand")} ${t("brandAriaSuffix")}`}
         >
-          <span className="inline-block h-[10px] w-[10px] shrink-0 rounded-full bg-coral" />
-          The Turing <span className="text-coral">Blog</span>
+          <span className="font-logo text-coral leading-none" aria-hidden="true">
+            $
+          </span>
+          {t("brand")}
         </Link>
 
         <div className="flex items-center gap-[18px] text-sm font-medium">

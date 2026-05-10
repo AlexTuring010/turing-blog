@@ -30,7 +30,8 @@ export async function generateMetadata({
   const project = getProjectBySlug(slug, locale as Locale);
   if (!project) return { title: slug };
   return {
-    title: `${project.title.replace(/\*+/g, "")} — Work — The Turing Blog`,
+    // Brand suffix comes from the title.template in app/[locale]/layout.tsx.
+    title: `${project.title.replace(/\*+/g, "")} — Work`,
     description: project.description,
   };
 }
