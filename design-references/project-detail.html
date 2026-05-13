@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>μ-compiler — The Turing Blog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Bowlby+One&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#15171a;
+    --paper-2:#1f2227;
+    --paper-3:#2a2e34;
+    --ink:#f0ebe0;
+    --ink-soft:#bfb8a8;
+    --ink-mute:#7a7568;
+    --rule:#3a3e46;
+    --coral:#87CF40;
+    --coral-dark:#9eda5c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+    font-size:16px;line-height:1.55;
+    font-variation-settings:"opsz" 14;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--coral);color:var(--paper)}
+
+  /* NAV (shared) */
+  nav.top{
+    padding:18px 0;border-bottom:1px solid var(--rule);
+    position:sticky;top:0;background:rgba(21,23,26,.92);backdrop-filter:blur(8px);z-index:100;
+  }
+  .nav-container{max-width:1120px;margin:0 auto;padding:0 48px}
+  .nav-inner{display:flex;justify-content:space-between;align-items:center}
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Bowlby One',sans-serif;
+    font-size:1.15rem;line-height:1;letter-spacing:.01em;
+    text-decoration:none;color:var(--ink);
+  }
+  .logo .dot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex-shrink:0}
+  .logo .accent{color:var(--coral)}
+  .nav-right{display:flex;gap:18px;align-items:center;font-size:14px;font-weight:500}
+  .nav-right a{transition:color .2s;position:relative;color:var(--ink)}
+  .nav-right a:hover{color:var(--coral)}
+  .nav-right a.active{color:var(--coral)}
+  .nav-right a.active::after{
+    content:"";position:absolute;left:0;right:0;bottom:-22px;height:3px;background:var(--coral);
+  }
+  .nav-sep{width:1px;height:18px;background:var(--rule);margin:0 4px}
+  .nav-right a.social{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:32px;height:32px;border-radius:50%;color:var(--ink-soft);
+    transition:color .2s, background .2s;
+  }
+  .nav-right a.social:hover{color:var(--coral);background:var(--paper-2)}
+  .nav-right a.social::after{display:none}
+  .nav-right a.cv-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:6px 12px;border-radius:999px;
+    border:1.5px solid var(--coral);
+    color:var(--ink);font-size:13px;font-weight:600;letter-spacing:.02em;
+  }
+  .nav-right a.cv-btn:hover{background:var(--coral);color:var(--paper)}
+  .nav-right a.cv-btn::after{display:none}
+  .nav-right a.cv-btn .arr{font-size:11px;font-weight:700}
+  .lang-toggle{
+    display:flex;background:var(--paper-2);border:1px solid var(--rule);
+    border-radius:999px;padding:3px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;
+  }
+  .lang-toggle span{padding:3px 10px;border-radius:999px;color:var(--ink-mute)}
+  .lang-toggle span.active{background:var(--coral);color:var(--paper)}
+
+  /* PROJECT WRAP */
+  .project-wrap{max-width:1000px;margin:0 auto;padding:48px 48px 32px}
+  .back-link{
+    display:inline-flex;align-items:center;gap:8px;
+    color:var(--ink-mute);font-size:14px;font-weight:500;
+    margin-bottom:40px;
+    transition:color .2s, gap .2s;
+  }
+  .back-link:hover{color:var(--coral);gap:12px}
+
+  /* HEADER */
+  .project-header{
+    display:grid;grid-template-columns:1.2fr 1fr;gap:48px;
+    margin-bottom:48px;align-items:start;
+  }
+  .project-header-text{min-width:0}
+  .project-meta-row{
+    display:flex;align-items:center;gap:12px;
+    font-size:12px;color:var(--ink-mute);font-weight:500;
+    margin-bottom:18px;letter-spacing:.02em;text-transform:uppercase;
+    font-family:'JetBrains Mono',monospace;
+    flex-wrap:wrap;
+  }
+  .project-meta-row .dot{width:3px;height:3px;border-radius:50%;background:var(--ink-mute);flex-shrink:0}
+  .project-status-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:999px;
+    border:1px solid var(--rule);
+    font-size:11px;font-weight:600;letter-spacing:.02em;
+    color:var(--ink-soft);
+  }
+  .project-status-pill .pulse{
+    width:6px;height:6px;border-radius:50%;background:#fbbf24;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(251,191,36,.5)}
+    50%{opacity:.7;box-shadow:0 0 0 6px rgba(251,191,36,0)}
+  }
+
+  .project-title{
+    font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.05;
+    font-weight:800;font-variation-settings:"opsz" 96;
+    letter-spacing:-.02em;margin-bottom:18px;
+  }
+  .project-title .it{font-style:italic;color:var(--coral-dark);font-weight:700}
+  .project-tagline{
+    font-size:1.1rem;line-height:1.5;color:var(--ink-soft);
+    font-weight:500;margin-bottom:24px;
+  }
+  .project-stack{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+  .project-stack .chip{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;font-weight:500;
+    padding:5px 11px;
+    border:1px solid var(--rule);
+    border-radius:6px;
+    color:var(--ink-soft);
+    background:var(--paper-2);
+    letter-spacing:.02em;
+  }
+  .project-links{display:flex;gap:10px;flex-wrap:wrap}
+  .project-links a{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:9px 14px;border-radius:8px;
+    font-size:13px;font-weight:600;
+    border:1.5px solid var(--rule);
+    background:var(--paper-2);
+    color:var(--ink);
+    transition:all .2s;
+  }
+  .project-links a:hover{border-color:var(--coral);color:var(--coral)}
+  .project-links a.primary{
+    background:var(--coral);border-color:var(--coral);color:var(--paper);
+  }
+  .project-links a.primary:hover{background:var(--coral-dark);color:var(--paper)}
+
+  /* COVER */
+  .project-cover{
+    aspect-ratio:1;
+    background:#0f1115;
+    border:1.5px solid var(--rule);
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .project-cover::before{
+    content:"let rec eval = function";
+    position:absolute;top:18%;left:24px;
+    color:rgba(135,207,64,.6);font-size:1rem;
+  }
+  .project-cover::after{
+    content:"| Int n -> n";
+    position:absolute;top:30%;left:24px;
+    color:rgba(192,184,168,.5);font-size:1rem;
+  }
+  .cover-line-3{
+    position:absolute;top:42%;left:24px;right:24px;
+    color:rgba(135,207,64,.5);font-size:.95rem;
+  }
+  .cover-line-4{
+    position:absolute;top:54%;left:24px;
+    color:rgba(192,184,168,.4);font-size:.95rem;
+  }
+
+  /* RELATED POSTS BAND - sits between header and body */
+  .related-posts{
+    background:#0d0e10;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding:32px 0;
+    margin-bottom:48px;
+  }
+  .related-posts-inner{
+    max-width:1000px;margin:0 auto;padding:0 48px;
+  }
+  .related-posts-head{
+    display:flex;align-items:baseline;gap:14px;
+    margin-bottom:18px;
+  }
+  .related-posts-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;color:var(--coral);
+    letter-spacing:.05em;text-transform:uppercase;font-weight:600;
+  }
+  .related-posts-rule{
+    flex:1;height:1px;background:var(--rule);
+  }
+  .related-posts-count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--ink-mute);
+  }
+  .related-list{
+    display:flex;flex-direction:column;
+  }
+  .related-item{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:18px;align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid var(--rule);
+    transition:color .2s, gap .2s;
+  }
+  .related-item:last-child{border-bottom:none}
+  .related-item:hover{color:var(--coral)}
+  .related-item:hover .related-arrow{transform:translateX(4px);color:var(--coral)}
+  .related-date{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--ink-mute);
+    letter-spacing:.05em;text-transform:uppercase;
+    white-space:nowrap;min-width:90px;
+  }
+  .related-title{
+    font-size:.97rem;line-height:1.35;color:var(--ink);font-weight:500;
+    transition:color .2s;
+  }
+  .related-item:hover .related-title{color:var(--coral)}
+  .related-arrow{
+    color:var(--ink-mute);font-size:.95rem;
+    transition:transform .2s, color .2s;
+  }
+
+  /* CASE STUDY BODY (similar to post body, but wider) */
+  .project-body{
+    max-width:720px;margin:0 auto;
+    padding:0 48px 64px;
+    font-size:17px;line-height:1.7;color:var(--ink);
+    font-variation-settings:"opsz" 14;
+  }
+  .project-body > * + *{margin-top:1.4em}
+  .project-body em{font-style:italic;color:var(--ink)}
+  .project-body strong{font-weight:700;color:var(--ink)}
+  .project-body a{
+    color:var(--coral);
+    text-decoration:underline;text-decoration-thickness:1.5px;
+    text-underline-offset:3px;
+    transition:color .2s;
+  }
+  .project-body a:hover{color:var(--coral-dark)}
+  .project-body h2{
+    font-size:1.6rem;font-weight:700;margin-top:2.5em;margin-bottom:.6em;
+    font-variation-settings:"opsz" 64;letter-spacing:-.01em;
+    color:var(--ink);
+  }
+  .project-body h2 .num{
+    color:var(--coral);font-family:'JetBrains Mono',monospace;
+    font-size:1rem;font-weight:500;margin-right:14px;
+  }
+  .project-body code{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.88em;
+    background:var(--paper-2);
+    color:var(--coral);
+    padding:2px 6px;border-radius:4px;
+    border:1px solid var(--rule);
+  }
+
+  /* SITE FOOTER */
+  footer{
+    background:#0d0e10;padding:32px 0;border-top:1px solid var(--rule);
+  }
+  .footer-inner{
+    max-width:1120px;margin:0 auto;padding:0 48px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:13px;color:var(--ink-mute);
+  }
+  .footer-inner .accent{color:var(--coral);font-weight:600}
+
+  @media (max-width:768px){
+    .project-wrap{padding:32px 20px 24px}
+    .project-header{grid-template-columns:1fr;gap:24px}
+    .project-cover{aspect-ratio:16/9;order:-1}
+    .related-posts-inner{padding:0 20px}
+    .project-body{padding:0 20px 48px;font-size:16.5px}
+    .footer-inner{flex-direction:column;gap:12px;text-align:center}
+    .nav-right a:not(.cv-btn):not(.social){display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="nav-container nav-inner">
+    <a href="#" class="logo"><span class="dot"></span>The Turing <span class="accent">Blog</span></a>
+    <div class="nav-right">
+      <a href="#">Home</a>
+      <a href="#">Writing</a>
+      <a href="#" class="active">Work</a>
+      <a href="#">About</a>
+      <span class="nav-sep"></span>
+      <a href="#" class="social" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+      </a>
+      <a href="#" class="social" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3v9zM6.5 8.25A1.75 1.75 0 1 1 6.5 4.75a1.75 1.75 0 0 1 0 3.5zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93-.83 0-1.62.62-1.62 1.97V19h-3v-9h2.9v1.3a3.11 3.11 0 0 1 2.7-1.4c1.55 0 3.4.86 3.4 3.8V19z"/></svg>
+      </a>
+      <a href="#" class="cv-btn">CV <span class="arr">↓</span></a>
+      <button class="lang-toggle">
+        <span class="active">EL</span><span>EN</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- PROJECT HEADER -->
+<div class="project-wrap">
+  <a href="#" class="back-link">← Πίσω στο work</a>
+
+  <header class="project-header">
+    <div class="project-header-text">
+      <div class="project-meta-row">
+        <span>side project</span>
+        <span class="dot"></span>
+        <span>2025</span>
+        <span class="dot"></span>
+        <span class="project-status-pill">
+          <span class="pulse"></span>
+          <span>WIP</span>
+        </span>
+      </div>
+      <h1 class="project-title">μ-<span class="it">compiler</span></h1>
+      <p class="project-tagline">Compiler από το μηδέν, σε OCaml. Δεν λειτουργεί ακόμα. Αλλά μαθαίνω.</p>
+      <div class="project-stack">
+        <span class="chip">ocaml</span>
+        <span class="chip">llvm</span>
+        <span class="chip">dune</span>
+        <span class="chip">menhir</span>
+      </div>
+      <div class="project-links">
+        <a href="#" class="primary">GitHub ↗</a>
+        <a href="#">Documentation ↗</a>
+      </div>
+    </div>
+    <div class="project-cover">
+      <div class="cover-line-3">| Add (a, b) -> eval a + eval b</div>
+      <div class="cover-line-4">| Mul (a, b) -> eval a * eval b</div>
+    </div>
+  </header>
+</div>
+
+<!-- RELATED POSTS BAND -->
+<section class="related-posts">
+  <div class="related-posts-inner">
+    <div class="related-posts-head">
+      <span class="related-posts-label">▸ Posts about this</span>
+      <span class="related-posts-rule"></span>
+      <span class="related-posts-count">2 posts</span>
+    </div>
+    <div class="related-list">
+      <a href="#" class="related-item">
+        <span class="related-date">14 Φεβ 2026</span>
+        <span class="related-title">Γιατί έγραψα τον δικό μου compiler.</span>
+        <span class="related-arrow">→</span>
+      </a>
+      <a href="#" class="related-item">
+        <span class="related-date">15 Νοε 2025</span>
+        <span class="related-title">Τι κατάλαβα γράφοντας μια JSON parser από το μηδέν</span>
+        <span class="related-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY BODY -->
+<article class="project-body">
+  <p>Όλα ξεκίνησαν με την εξής σκέψη: <em>θέλω να καταλάβω πραγματικά τι κάνει ο compiler.</em></p>
+
+  <p>Όχι "καταλαβαίνω" όπως καταλαβαίνεις τις λέξεις σε ένα textbook. Καταλαβαίνω όπως όταν έχεις γράψει τον δικό σου και ξέρεις γιατί κάθε γραμμή κώδικα είναι εκεί που είναι.</p>
+
+  <h2><span class="num">01</span>Τι κάνει ο μ-compiler</h2>
+
+  <p>Σήμερα, ο compiler δέχεται μια απλή functional γλώσσα με integers, booleans, if-expressions, και first-class functions. Παράγει LLVM IR, που μετά μετατρέπεται σε native binary.</p>
+
+  <p>Δεν έχει: type system (έρχεται), pattern matching, generics, modules, ή <em>error messages</em> που δεν είναι τραγικά.</p>
+
+  <h2><span class="num">02</span>Αρχιτεκτονική</h2>
+
+  <p>Τέσσερα phases, σχεδόν παραδοσιακά:</p>
+
+  <p><strong>Lexer →</strong> Παράγει tokens. Γραμμένος με το hand, χωρίς generators. Επειδή ήθελα να δω <em>πώς</em> γίνεται.</p>
+
+  <p><strong>Parser →</strong> Recursive descent. Δοκίμασα πρώτα Menhir (parser generator για OCaml) αλλά γύρισα σε hand-written για debugging visibility.</p>
+
+  <p><strong>Type checker →</strong> Hindley-Milner inference. Αυτό ήταν το πιο δύσκολο part — έπρεπε να ξαναδιαβάσω το σχετικό κεφάλαιο του <code>Crafting Interpreters</code> τρεις φορές.</p>
+
+  <p><strong>Codegen →</strong> Emits LLVM IR via το OCaml binding του LLVM. Το LLVM κάνει την heavy work (optimization, register allocation, codegen).</p>
+
+  <p>Το repo έχει περισσότερες λεπτομέρειες — ο κώδικας είναι σχολιασμένος γιατί κυρίως τον γράφω για να μαθαίνω, όχι για production.</p>
+</article>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 Αλέξανδρος Γκιάφης</span>
+    <span>Built with <span class="accent">Next.js</span> · Hosted on <span class="accent">Vercel</span></span>
+  </div>
+</footer>
+
+</body>
+</html>

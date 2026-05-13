@@ -12,6 +12,8 @@ import {
   getAllPostSlugLocalePairs,
   getPostBySlug,
   postExistsInOtherLocale,
+  resolveRelatedProject,
+  type RelatedProjectTarget,
 } from "@/lib/content";
 import type { Post } from "@/lib/types";
 
@@ -51,7 +53,18 @@ export default async function PostPage({
   }
 
   const { prev, next } = getAdjacentPosts(slug, locale);
-  return <PostView post={post} body={post.body} prev={prev} next={next} />;
+  const relatedTarget = post.relatedProject
+    ? resolveRelatedProject(post.relatedProject, locale)
+    : undefined;
+  return (
+    <PostView
+      post={post}
+      body={post.body}
+      prev={prev}
+      next={next}
+      relatedTarget={relatedTarget}
+    />
+  );
 }
 
 async function PostView({
@@ -59,11 +72,13 @@ async function PostView({
   body,
   prev,
   next,
+  relatedTarget,
 }: {
   post: Post;
   body: string;
   prev?: Post;
   next?: Post;
+  relatedTarget?: RelatedProjectTarget;
 }) {
   const t = await getTranslations("post");
   const tTags = await getTranslations("tags");
@@ -113,6 +128,10 @@ async function PostView({
           <p className="mt-5 text-[1.15rem] font-medium leading-[1.5] text-ink-soft">
             <RichText text={post.description} />
           </p>
+
+          {relatedTarget && (
+            <RelatedProjectPill target={relatedTarget} locale={post.locale} />
+          )}
 
           <div className="mt-8 flex items-center gap-[14px] border-t border-rule pt-6">
             <div className="relative h-[42px] w-[42px] shrink-0 overflow-hidden rounded-full border-[1.5px] border-coral">
@@ -201,6 +220,45 @@ async function PostNavBand({
         )}
       </div>
     </section>
+  );
+}
+
+async function RelatedProjectPill({
+  target,
+  locale,
+}: {
+  target: RelatedProjectTarget;
+  locale: Locale;
+}) {
+  const t = await getTranslations("post");
+  let href: string;
+  let title: string;
+  if (target.kind === "project") {
+    href = `/${locale}/work/${target.project.slug}`;
+    title = target.project.title;
+  } else if (target.kind === "series") {
+    href = `/${locale}/work/${target.series.slug}`;
+    title = target.series.title;
+  } else {
+    href = `/${locale}/work/${target.series.slug}/${target.item.slug}`;
+    title = target.item.title;
+  }
+
+  return (
+    <Link
+      href={href}
+      className="mt-6 inline-flex items-center gap-[10px] rounded-lg border-[1.5px] border-rule border-l-[3px] border-l-coral bg-paper-2 px-4 py-[10px] transition-all hover:-translate-x-px hover:-translate-y-px hover:border-coral"
+    >
+      <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.05em] text-ink-mute">
+        {t("aboutLabel")}
+      </span>
+      <span className="text-sm font-semibold text-ink">
+        <RichText text={title} />
+      </span>
+      <span className="ml-1 font-bold text-coral transition-transform group-hover:translate-x-[3px]">
+        →
+      </span>
+    </Link>
   );
 }
 

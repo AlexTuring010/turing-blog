@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import type { Project } from "@/lib/types";
+
+type CoverProject = { slug: string; cover?: string };
 
 // CSS-gradient cover styles per slug, ported from design-references/work.html.
 // Real images (project.cover) take precedence; otherwise a project that has
@@ -74,7 +75,7 @@ export function ProjectCover({
   project,
   children,
 }: {
-  project: Project;
+  project: CoverProject;
   children?: React.ReactNode;
 }) {
   // Priority: explicit image cover > named gradient > slug-hashed fallback.

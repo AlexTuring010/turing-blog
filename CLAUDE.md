@@ -192,6 +192,130 @@ Ask the user. Don't invent product behavior — the user is the product owner. E
 - Anything involving the author's real biographical details, GitHub URLs, real email
 - New page types not in the original design (don't preemptively add `/blog/page/[number]` pagination — only build it when explicitly requested)
 
+## Project taxonomy — two-level grouping
+
+Projects have a **category** (top-level) and optional **subcategory** (tech domain). The work archive groups projects into visible sections by category, and within categories that support it, subgroups them by subcategory. **No filter pills** — the visible section structure replaces them.
+
+### Categories (required `category:` field)
+
+- `side-project` — personal initiatives (subcategories: yes)
+- `freelance` — paid client work (flat list)
+- `competition` — hackathons, ICPC, etc. (flat list)
+- `school` — coursework (subcategories: yes)
+
+### Subcategories (optional `subcategory:` field — only meaningful for `side-project` and `school`)
+
+`web | systems | compilers | ml | distributed | data | cli`
+
+### Rendering rules on the work archive
+
+- Categories render in a **fixed order**: side-project → freelance → competition → school
+- Empty categories are **hidden**
+- A category with only one populated subcategory renders flat (no subcategory header)
+- URL params (nice-to-have, not blocking): `?category=side-project` (anchor scroll), `?subcategory=ml` (filter across categories)
+
+## Project series — composite cards for grouped work
+
+Multiple related projects (e.g. three OS-course homework assignments) render as **one composite card** rather than separate cards.
+
+### File layout
+
+```
+content/projects/
+├── crowdless.el.mdx              ← standalone project
+├── crowdless.en.mdx
+├── series/
+│   ├── os-coursework.el.mdx      ← series metadata
+│   ├── os-coursework.en.mdx
+│   └── os-coursework/
+│       ├── hw1.el.mdx            ← item case study
+│       ├── hw1.en.mdx
+│       ├── hw2.el.mdx
+│       └── hw2.en.mdx
+```
+
+### Frontmatter
+
+**Series file** (under `series/`):
+```yaml
+---
+title: "Operating Systems coursework"
+context: "NTUA · CS-3.5 · Spring 2025"
+category: "school"
+subcategory: "systems"
+year: 2025
+order: 1
+stack: ["c", "pthread", "xv6", "fuse", "linux"]
+---
+```
+
+**Item file** (under `series/<slug>/`):
+```yaml
+---
+title: "Custom thread library από το μηδέν"
+seriesSlug: "os-coursework"
+seriesOrder: 1
+seriesLabel: "HW1"
+status: "done"           # done | wip
+description: "..."
+stack: ["c", "pthread"]
+links:
+  github: "https://github.com/alex/os-hw1"
+---
+```
+
+### Routes
+
+- `/[locale]/work` — series renders as composite card
+- `/[locale]/work/<series-slug>` — series detail page (lists items with longer context)
+- `/[locale]/work/<series-slug>/<item-slug>` — individual item case study (same template as standalone project)
+
+### Visual treatment (composite card on archive)
+
+- **3px green top border** (signal: I'm a series)
+- **No 16:9 cover** — header strip with green "SERIES · N" badge and project number
+- **Item rows** in the card body, each clickable (deep links to item case study). Each row: green mono label, title, status pill, arrow
+- **Combined tech stack** at the bottom (union from frontmatter)
+- **No bottom action bar** (items are individually clickable)
+- **Whole-card hover lift disabled** — only individual items hover-highlight
+
+### Build-time validation
+
+- Every item must reference an existing series via `seriesSlug` — build fails otherwise
+- Both EL and EN required for every item (parity)
+- Series with 0 items is hidden from the archive (not an error)
+
+## Cross-linking — posts and projects reference each other
+
+Posts can declare which project they're about. Projects display all posts that reference them. The relationship is **one-way in data, bidirectional in display**.
+
+### Post frontmatter — new optional field
+
+```yaml
+---
+title: "..."
+date: "2026-02-14"
+tags: ["learning", "compilers"]
+relatedProject: "mu-compiler"   # optional. Project slug or series-slug/item-slug.
+readingTime: 12
+---
+```
+
+- `relatedProject` is **optional** — most posts won't have one
+- Value is a project slug or a `series-slug/item-slug` for series items
+- One post → at most one project (no multi-relations for now)
+
+### Display
+
+- **Post page**: when `relatedProject` is set, a green-left-bordered "About: <project> →" pill renders between subtitle and author row. Clicking goes to the project case study.
+- **Project case study page**: a dark "Posts about this" band sits between header and body, listing posts where `relatedProject === this.slug`. Hidden if no related posts.
+- **Work archive**: unchanged — clicking through to the project page is one click; don't clutter cards with cross-link badges.
+
+### Build-time validation
+
+- If a post has `relatedProject: "foo"`, project (or series-item) "foo" must exist in either locale — build fails otherwise
+- The reverse direction (project → posts) is computed at build, not stored in project frontmatter
+
 ## Ingesting new posts from `inbox/`
 
 The user drops drafts into `inbox/<draft-folder>/` and asks "ingest the new draft" (or names a specific folder). Workflow Claude follows on that request:

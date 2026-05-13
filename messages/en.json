@@ -97,16 +97,48 @@
     "yearRange": "2024 — 2026",
     "title": "Work*.*",
     "lede": "Projects I'm working on, projects I finished, and projects that are technically finished but somehow always have one more thing to fix.",
-    "filterLabel": "filter:",
-    "filterAll": "All",
+    "countSingular": "project",
+    "countPlural": "projects",
+    "subcategoryItemsSuffix": "items",
+    "subcategorySeriesSuffix": "series",
     "actionCaseStudy": "Case study",
     "actionLive": "Live",
-    "actionGitHub": "GitHub"
+    "actionGitHub": "GitHub",
+    "seriesBadge": "SERIES",
+    "categories": {
+      "side-project": "Side *projects.*",
+      "freelance": "Free*lance.*",
+      "competition": "Compe*titions.*",
+      "school": "School*.*"
+    },
+    "subcategories": {
+      "web": "web / tools",
+      "systems": "systems / OS",
+      "compilers": "compilers / languages",
+      "ml": "machine learning",
+      "distributed": "distributed systems",
+      "data": "databases / data",
+      "cli": "command-line tools",
+      "_unsorted": "other"
+    },
+    "seriesItemStatus": {
+      "done": "Done",
+      "wip": "WIP"
+    }
   },
   "workCase": {
     "backToWork": "Back to work",
+    "backToSeries": "Back to the series",
     "stackLabel": "stack",
-    "yearLabel": "year"
+    "yearLabel": "year",
+    "categoryLabel": "category",
+    "relatedPostsLabel": "▸ Posts about this",
+    "relatedPostsCountSingular": "post",
+    "relatedPostsCountPlural": "posts",
+    "seriesItemsLabel": "▸ In this series",
+    "linkLive": "Live",
+    "linkGitHub": "GitHub",
+    "linkDocs": "Documentation"
   },
   "status": {
     "live": "LIVE",
@@ -122,6 +154,7 @@
     "authorMeta": "CS student · Athens",
     "prevLabel": "← Previous",
     "nextLabel": "Next →",
+    "aboutLabel": "About:",
     "missing": {
       "eyebrow": "— Not translated yet",
       "body": "This post is only available in <locale></locale>.",

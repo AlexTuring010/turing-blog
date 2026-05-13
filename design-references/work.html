@@ -103,36 +103,51 @@
     font-weight:500;
   }
 
-  /* FILTER BAR */
-  .filter-bar{
-    display:flex;gap:8px;flex-wrap:wrap;
-    padding:16px 0;margin-bottom:32px;
-    border-top:1px solid var(--rule);
+  /* CLUSTER SECTIONS */
+  .cluster{margin-bottom:64px}
+  .cluster:last-of-type{margin-bottom:0}
+  .cluster-head{
+    display:flex;align-items:baseline;gap:18px;
+    margin-bottom:24px;padding-bottom:14px;
     border-bottom:1px solid var(--rule);
-    align-items:center;
   }
-  .filter-label{
-    font-size:11px;color:var(--ink-mute);
-    letter-spacing:.05em;text-transform:uppercase;font-weight:600;
-    margin-right:8px;font-family:'JetBrains Mono',monospace;
-  }
-  .filter-pill{
-    font-size:13px;font-weight:600;
-    padding:6px 14px;border-radius:999px;
-    border:1.5px solid var(--rule);
-    color:var(--ink-soft);
-    cursor:pointer;
-    transition:all .2s;
-    background:transparent;
-    font-family:inherit;
-  }
-  .filter-pill:hover{border-color:var(--coral);color:var(--ink)}
-  .filter-pill.active{
-    background:var(--coral);border-color:var(--coral);color:var(--paper);
-  }
-  .filter-pill .count{
+  .cluster-label{
     font-family:'JetBrains Mono',monospace;
-    opacity:.6;font-size:11px;margin-left:6px;
+    font-size:.8rem;color:var(--ink-mute);
+    letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+  }
+  .cluster-title{
+    font-size:1.6rem;font-weight:800;
+    font-variation-settings:"opsz" 64;
+    letter-spacing:-.01em;color:var(--ink);
+  }
+  .cluster-title .it{font-style:italic;color:var(--coral-dark)}
+  .cluster-count{
+    margin-left:auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.8rem;color:var(--coral);font-weight:500;
+  }
+
+  /* SUBCATEGORY (within a cluster) */
+  .subcat{margin-bottom:36px}
+  .subcat:last-child{margin-bottom:0}
+  .subcat-head{
+    display:flex;align-items:center;gap:14px;
+    margin-bottom:18px;
+  }
+  .subcat-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--coral);
+    letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+    white-space:nowrap;
+  }
+  .subcat-rule{
+    flex:1;height:1px;background:var(--rule);
+  }
+  .subcat-count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--ink-mute);
+    letter-spacing:.05em;
   }
 
   /* WORK GRID */
@@ -154,6 +169,88 @@
     transform:translate(-3px,-3px);
     box-shadow:6px 6px 0 var(--coral);
     border-color:var(--coral);
+  }
+
+  /* SERIES CARD (composite) */
+  .work-card.is-series{
+    border-top:3px solid var(--coral);
+  }
+  .work-card.is-series:hover{
+    transform:none;
+    box-shadow:none;
+    border-color:var(--rule);
+    border-top-color:var(--coral);
+  }
+  .work-card.is-series .work-cover{
+    aspect-ratio:auto;
+    min-height:60px;
+    padding:14px 18px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .series-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:5px 11px;
+    background:rgba(135,207,64,.12);
+    border:1px solid var(--coral);
+    border-radius:999px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;font-weight:600;
+    color:var(--coral);
+    letter-spacing:.05em;
+  }
+  .series-badge .count{
+    padding:1px 7px;border-radius:999px;
+    background:var(--coral);color:var(--paper);
+    font-size:10px;
+  }
+  .series-context{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--ink-mute);
+    letter-spacing:.05em;text-transform:uppercase;
+    margin-top:-4px;
+  }
+  .series-items{
+    display:flex;flex-direction:column;
+    margin:6px 0 4px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .series-item{
+    display:grid;
+    grid-template-columns:auto 1fr auto auto;
+    gap:12px;align-items:center;
+    padding:11px 0;
+    border-bottom:1px solid var(--rule);
+    transition:color .2s, gap .2s;
+  }
+  .series-item:last-child{border-bottom:none}
+  .series-item:hover{color:var(--coral)}
+  .series-item:hover .series-item-arrow{transform:translateX(3px);color:var(--coral)}
+  .series-item-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--coral);font-weight:600;
+    letter-spacing:.05em;
+    min-width:36px;
+  }
+  .series-item-title{
+    font-size:.93rem;color:var(--ink);font-weight:500;line-height:1.35;
+    transition:color .2s;
+  }
+  .series-item:hover .series-item-title{color:var(--coral)}
+  .series-item-status{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;font-weight:600;
+    padding:2px 7px;border-radius:4px;
+    letter-spacing:.05em;text-transform:uppercase;
+    border:1px solid var(--rule);
+    color:var(--ink-mute);
+    white-space:nowrap;
+  }
+  .series-item-status.done{color:var(--ink-soft)}
+  .series-item-status.wip{color:#fbbf24;border-color:rgba(251,191,36,.4)}
+  .series-item-arrow{
+    color:var(--ink-mute);font-size:.95rem;
+    transition:transform .2s, color .2s;
   }
 
   /* COVER */
@@ -322,6 +419,80 @@
   .work-actions .ext:hover{color:var(--coral)}
   .work-actions .sep{color:var(--rule)}
 
+  /* SERIES CARD (composite — contains multiple homework items) */
+  .work-card.is-series:hover{
+    transform:none;
+    box-shadow:none;
+    border-color:var(--rule);
+  }
+  .series-badge{
+    position:absolute;top:14px;left:14px;
+    display:inline-flex;align-items:center;gap:6px;
+    padding:5px 11px;
+    background:rgba(135,207,64,.15);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--coral);
+    border-radius:999px;
+    font-size:11px;font-weight:600;
+    color:var(--coral);
+    letter-spacing:.02em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .series-badge .count{
+    background:var(--coral);
+    color:var(--paper);
+    padding:1px 6px;border-radius:6px;
+    font-size:10px;font-weight:700;
+  }
+  .series-context{
+    font-size:.85rem;color:var(--ink-mute);
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:.02em;
+    margin-top:-6px;margin-bottom:4px;
+  }
+  .series-items{
+    display:flex;flex-direction:column;
+    margin:6px 0 4px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .series-item{
+    display:grid;
+    grid-template-columns:auto 1fr auto auto;
+    gap:12px;align-items:center;
+    padding:12px 2px;
+    border-bottom:1px solid var(--rule);
+    transition:padding .15s;
+  }
+  .series-item:last-child{border-bottom:none}
+  .series-item:hover{padding-left:8px}
+  .series-item:hover .series-item-title{color:var(--coral)}
+  .series-item:hover .series-item-arrow{transform:translateX(3px);color:var(--coral)}
+  .series-item-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--coral);
+    font-weight:600;letter-spacing:.05em;
+    min-width:32px;
+  }
+  .series-item-title{
+    font-size:.95rem;color:var(--ink);
+    font-weight:500;
+    transition:color .2s;
+    min-width:0;
+  }
+  .series-item-status{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;color:var(--ink-mute);
+    letter-spacing:.05em;text-transform:uppercase;
+  }
+  .series-item-status.done{color:var(--ink-soft)}
+  .series-item-status.wip{color:#fbbf24}
+  .series-item-arrow{
+    color:var(--ink-mute);
+    font-family:'JetBrains Mono',monospace;font-size:.9rem;
+    transition:transform .2s,color .2s;
+  }
+
   /* SITE FOOTER */
   footer{
     background:#0d0e10;
@@ -374,7 +545,7 @@
 <main class="work-wrap">
   <header class="work-header">
     <div class="work-eyebrow">
-      <span>6 projects</span>
+      <span>12 projects</span>
       <span class="dot"></span>
       <span>2024 — 2026</span>
     </div>
@@ -382,169 +553,374 @@
     <p class="work-lede">Projects που δουλεύω, projects που τέλειωσα, και projects που <em style="font-style:italic">τυπικά</em> τέλειωσαν αλλά πάντα κάτι έχουν να φτιαχτεί ακόμα.</p>
   </header>
 
-  <!-- FILTER BAR -->
-  <div class="filter-bar">
-    <span class="filter-label">filter:</span>
-    <button class="filter-pill active">All <span class="count">6</span></button>
-    <button class="filter-pill">side project <span class="count">3</span></button>
-    <button class="filter-pill">freelance <span class="count">2</span></button>
-    <button class="filter-pill">competition <span class="count">1</span></button>
-  </div>
+  <!-- SIDE PROJECTS -->
+  <section class="cluster">
+    <div class="cluster-head">
+      <span class="cluster-label">/01</span>
+      <h2 class="cluster-title">Side <span class="it">projects.</span></h2>
+      <span class="cluster-count">3 projects</span>
+    </div>
 
-  <!-- WORK GRID -->
-  <div class="work-grid">
-
-    <!-- Crowdless -->
-    <article class="work-card">
-      <div class="work-cover cover-crowdless">
-        <span class="work-status live">
-          <span class="pulse"></span>
-          <span>LIVE</span>
-        </span>
-        <span class="work-num">№ 01 · 2026</span>
+    <!-- web / tools -->
+    <div class="subcat">
+      <div class="subcat-head">
+        <span class="subcat-label">▸ web / tools</span>
+        <span class="subcat-rule"></span>
+        <span class="subcat-count">2</span>
       </div>
-      <div class="work-content">
-        <h2 class="work-card-title">Crowd<span class="it">less</span></h2>
-        <p class="work-card-tagline">Σε στέλνει σε όμορφα ήσυχα μέρη — όχι απλά ήσυχα. Hidden gems map για την Αθήνα.</p>
-        <div class="work-stack">
-          <span class="chip">rust</span>
-          <span class="chip">wasm</span>
-          <span class="chip">leaflet</span>
-          <span class="chip">postgis</span>
+      <div class="work-grid">
+
+        <!-- Crowdless -->
+        <article class="work-card">
+          <div class="work-cover cover-crowdless">
+            <span class="work-status live">
+              <span class="pulse"></span>
+              <span>LIVE</span>
+            </span>
+            <span class="work-num">№ 01 · 2026</span>
+          </div>
+          <div class="work-content">
+            <h2 class="work-card-title">Crowd<span class="it">less</span></h2>
+            <p class="work-card-tagline">Σε στέλνει σε όμορφα ήσυχα μέρη — όχι απλά ήσυχα. Hidden gems map για την Αθήνα.</p>
+            <div class="work-stack">
+              <span class="chip">rust</span>
+              <span class="chip">wasm</span>
+              <span class="chip">leaflet</span>
+              <span class="chip">postgis</span>
+            </div>
+          </div>
+          <div class="work-actions">
+            <a href="#" class="primary">Case study →</a>
+            <a href="#" class="ext">Live ↗</a>
+            <span class="sep">·</span>
+            <a href="#" class="ext">GitHub ↗</a>
+          </div>
+        </article>
+
+        <!-- The Turing Blog -->
+        <article class="work-card">
+          <div class="work-cover cover-blog">
+            <span class="work-status live">
+              <span class="pulse"></span>
+              <span>YOU ARE HERE</span>
+            </span>
+            <span class="work-num">№ 02 · 2026</span>
+          </div>
+          <div class="work-content">
+            <h2 class="work-card-title">The Turing <span class="it">Blog</span></h2>
+            <p class="work-card-tagline">Αυτό που διαβάζεις τώρα. Custom design, MDX posts, hand-tuned για loading speed.</p>
+            <div class="work-stack">
+              <span class="chip">nextjs</span>
+              <span class="chip">mdx</span>
+              <span class="chip">tailwind</span>
+              <span class="chip">vercel</span>
+            </div>
+          </div>
+          <div class="work-actions">
+            <a href="#" class="primary">Case study →</a>
+            <a href="#" class="ext">GitHub ↗</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- compilers / languages -->
+    <div class="subcat">
+      <div class="subcat-head">
+        <span class="subcat-label">▸ compilers / languages</span>
+        <span class="subcat-rule"></span>
+        <span class="subcat-count">1</span>
+      </div>
+      <div class="work-grid">
+
+        <!-- μ-compiler -->
+        <article class="work-card">
+          <div class="work-cover cover-mucompiler">
+            <span class="work-status wip">
+              <span class="pulse"></span>
+              <span>WIP</span>
+            </span>
+            <span class="work-num">№ 01 · 2025</span>
+          </div>
+          <div class="work-content">
+            <h2 class="work-card-title">μ-<span class="it">compiler</span></h2>
+            <p class="work-card-tagline">Compiler από το μηδέν, σε OCaml. Δεν λειτουργεί ακόμα. Αλλά μαθαίνω.</p>
+            <div class="work-stack">
+              <span class="chip">ocaml</span>
+              <span class="chip">llvm</span>
+              <span class="chip">dune</span>
+            </div>
+          </div>
+          <div class="work-actions">
+            <a href="#" class="primary">Case study →</a>
+            <a href="#" class="ext">GitHub ↗</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FREELANCE -->
+  <section class="cluster">
+    <div class="cluster-head">
+      <span class="cluster-label">/02</span>
+      <h2 class="cluster-title">Free<span class="it">lance.</span></h2>
+      <span class="cluster-count">2 projects</span>
+    </div>
+    <div class="work-grid">
+
+      <!-- HeyPeach -->
+      <article class="work-card">
+        <div class="work-cover cover-heypeach">
+          <span class="work-status live">
+            <span class="pulse"></span>
+            <span>LIVE</span>
+          </span>
+          <span class="work-num">№ 01 · 2025</span>
         </div>
-      </div>
-      <div class="work-actions">
-        <a href="#" class="primary">Case study →</a>
-        <a href="#" class="ext">Live ↗</a>
-        <span class="sep">·</span>
-        <a href="#" class="ext">GitHub ↗</a>
-      </div>
-    </article>
-
-    <!-- HackAthens -->
-    <article class="work-card">
-      <div class="work-cover cover-hackathens">
-        <span class="work-status award">
-          <span class="pulse"></span>
-          <span>2ND PLACE</span>
-        </span>
-        <span class="work-num">№ 02 · 2025</span>
-      </div>
-      <div class="work-content">
-        <h2 class="work-card-title">Hack<span class="it">athens</span> '25</h2>
-        <p class="work-card-tagline">48 ώρες, 3 άνθρωποι, ένα ML model που προβλέπει λάθος πράγματα με ύφος.</p>
-        <div class="work-stack">
-          <span class="chip">python</span>
-          <span class="chip">fastapi</span>
-          <span class="chip">pytorch</span>
-          <span class="chip">react</span>
+        <div class="work-content">
+          <h2 class="work-card-title">Hey<span class="it">Peach</span> Magazine</h2>
+          <p class="work-card-tagline">Magazine site για ομάδα editors. Sanity CMS + Next.js, custom design system.</p>
+          <div class="work-stack">
+            <span class="chip">nextjs</span>
+            <span class="chip">sanity</span>
+            <span class="chip">tailwind</span>
+            <span class="chip">vercel</span>
+          </div>
         </div>
-      </div>
-      <div class="work-actions">
-        <a href="#" class="primary">Case study →</a>
-        <a href="#" class="ext">GitHub ↗</a>
-      </div>
-    </article>
-
-    <!-- μ-compiler -->
-    <article class="work-card">
-      <div class="work-cover cover-mucompiler">
-        <span class="work-status wip">
-          <span class="pulse"></span>
-          <span>WIP</span>
-        </span>
-        <span class="work-num">№ 03 · 2025</span>
-      </div>
-      <div class="work-content">
-        <h2 class="work-card-title">μ-<span class="it">compiler</span></h2>
-        <p class="work-card-tagline">Compiler από το μηδέν, σε OCaml. Δεν λειτουργεί ακόμα. Αλλά μαθαίνω.</p>
-        <div class="work-stack">
-          <span class="chip">ocaml</span>
-          <span class="chip">llvm</span>
-          <span class="chip">dune</span>
+        <div class="work-actions">
+          <a href="#" class="primary">Case study →</a>
+          <a href="#" class="ext">Live ↗</a>
         </div>
-      </div>
-      <div class="work-actions">
-        <a href="#" class="primary">Case study →</a>
-        <a href="#" class="ext">GitHub ↗</a>
-      </div>
-    </article>
+      </article>
 
-    <!-- HeyPeach -->
-    <article class="work-card">
-      <div class="work-cover cover-heypeach">
-        <span class="work-status live">
-          <span class="pulse"></span>
-          <span>LIVE</span>
-        </span>
-        <span class="work-num">№ 04 · 2025</span>
-      </div>
-      <div class="work-content">
-        <h2 class="work-card-title">Hey<span class="it">Peach</span> Magazine</h2>
-        <p class="work-card-tagline">Magazine site για ομάδα editors. Sanity CMS + Next.js, custom design system.</p>
-        <div class="work-stack">
-          <span class="chip">nextjs</span>
-          <span class="chip">sanity</span>
-          <span class="chip">tailwind</span>
-          <span class="chip">vercel</span>
+      <!-- gkiafis.gr -->
+      <article class="work-card">
+        <div class="work-cover cover-gkiafis">
+          <span class="work-status live">
+            <span class="pulse"></span>
+            <span>LIVE</span>
+          </span>
+          <span class="work-num">№ 02 · 2024</span>
         </div>
-      </div>
-      <div class="work-actions">
-        <a href="#" class="primary">Case study →</a>
-        <a href="#" class="ext">Live ↗</a>
-      </div>
-    </article>
-
-    <!-- gkiafis.gr -->
-    <article class="work-card">
-      <div class="work-cover cover-gkiafis">
-        <span class="work-status live">
-          <span class="pulse"></span>
-          <span>LIVE</span>
-        </span>
-        <span class="work-num">№ 05 · 2024</span>
-      </div>
-      <div class="work-content">
-        <h2 class="work-card-title">gkiafis<span class="it">.gr</span></h2>
-        <p class="work-card-tagline">Freelance services landing page. Πρώτο μου production deploy.</p>
-        <div class="work-stack">
-          <span class="chip">astro</span>
-          <span class="chip">typescript</span>
-          <span class="chip">cloudflare</span>
+        <div class="work-content">
+          <h2 class="work-card-title">gkiafis<span class="it">.gr</span></h2>
+          <p class="work-card-tagline">Freelance services landing page. Πρώτο μου production deploy.</p>
+          <div class="work-stack">
+            <span class="chip">astro</span>
+            <span class="chip">typescript</span>
+            <span class="chip">cloudflare</span>
+          </div>
         </div>
-      </div>
-      <div class="work-actions">
-        <a href="#" class="primary">Case study →</a>
-        <a href="#" class="ext">Live ↗</a>
-      </div>
-    </article>
-
-    <!-- The Turing Blog (this site) -->
-    <article class="work-card">
-      <div class="work-cover cover-blog">
-        <span class="work-status live">
-          <span class="pulse"></span>
-          <span>YOU ARE HERE</span>
-        </span>
-        <span class="work-num">№ 06 · 2026</span>
-      </div>
-      <div class="work-content">
-        <h2 class="work-card-title">The Turing <span class="it">Blog</span></h2>
-        <p class="work-card-tagline">Αυτό που διαβάζεις τώρα. Custom design, MDX posts, hand-tuned για loading speed.</p>
-        <div class="work-stack">
-          <span class="chip">nextjs</span>
-          <span class="chip">mdx</span>
-          <span class="chip">tailwind</span>
-          <span class="chip">vercel</span>
+        <div class="work-actions">
+          <a href="#" class="primary">Case study →</a>
+          <a href="#" class="ext">Live ↗</a>
         </div>
-      </div>
-      <div class="work-actions">
-        <a href="#" class="primary">Case study →</a>
-        <a href="#" class="ext">GitHub ↗</a>
-      </div>
-    </article>
+      </article>
 
-  </div>
+    </div>
+  </section>
+
+  <!-- COMPETITIONS -->
+  <section class="cluster">
+    <div class="cluster-head">
+      <span class="cluster-label">/03</span>
+      <h2 class="cluster-title">Compe<span class="it">titions.</span></h2>
+      <span class="cluster-count">1 project</span>
+    </div>
+    <div class="work-grid">
+
+      <!-- HackAthens -->
+      <article class="work-card">
+        <div class="work-cover cover-hackathens">
+          <span class="work-status award">
+            <span class="pulse"></span>
+            <span>2ND PLACE</span>
+          </span>
+          <span class="work-num">№ 01 · 2025</span>
+        </div>
+        <div class="work-content">
+          <h2 class="work-card-title">Hack<span class="it">athens</span> '25</h2>
+          <p class="work-card-tagline">48 ώρες, 3 άνθρωποι, ένα ML model που προβλέπει λάθος πράγματα με ύφος.</p>
+          <div class="work-stack">
+            <span class="chip">python</span>
+            <span class="chip">fastapi</span>
+            <span class="chip">pytorch</span>
+            <span class="chip">react</span>
+          </div>
+        </div>
+        <div class="work-actions">
+          <a href="#" class="primary">Case study →</a>
+          <a href="#" class="ext">GitHub ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- SCHOOL -->
+  <section class="cluster">
+    <div class="cluster-head">
+      <span class="cluster-label">/04</span>
+      <h2 class="cluster-title">School<span class="it">.</span></h2>
+      <span class="cluster-count">4 projects</span>
+    </div>
+
+    <!-- systems / OS -->
+    <div class="subcat">
+      <div class="subcat-head">
+        <span class="subcat-label">▸ systems / OS</span>
+        <span class="subcat-rule"></span>
+        <span class="subcat-count">1 series · 3 items</span>
+      </div>
+      <div class="work-grid">
+        <article class="work-card is-series">
+          <div class="work-cover cover-mucompiler">
+            <span class="series-badge">
+              <span>SERIES</span>
+              <span class="count">3</span>
+            </span>
+            <span class="work-num">№ 01 · 2025</span>
+          </div>
+          <div class="work-content">
+            <h2 class="work-card-title">Operating <span class="it">Systems</span> coursework</h2>
+            <p class="series-context">NTUA · CS-3.5 · Spring 2025</p>
+            <div class="series-items">
+              <a href="#" class="series-item">
+                <span class="series-item-num">HW1</span>
+                <span class="series-item-title">Custom thread library από το μηδέν</span>
+                <span class="series-item-status done">Done</span>
+                <span class="series-item-arrow">→</span>
+              </a>
+              <a href="#" class="series-item">
+                <span class="series-item-num">HW2</span>
+                <span class="series-item-title">Virtual memory paging + swap</span>
+                <span class="series-item-status done">Done</span>
+                <span class="series-item-arrow">→</span>
+              </a>
+              <a href="#" class="series-item">
+                <span class="series-item-num">HW3</span>
+                <span class="series-item-title">User-space filesystem με FUSE</span>
+                <span class="series-item-status done">Done</span>
+                <span class="series-item-arrow">→</span>
+              </a>
+            </div>
+            <div class="work-stack">
+              <span class="chip">c</span>
+              <span class="chip">pthread</span>
+              <span class="chip">xv6</span>
+              <span class="chip">fuse</span>
+              <span class="chip">linux</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- compilers / languages -->
+    <div class="subcat">
+      <div class="subcat-head">
+        <span class="subcat-label">▸ compilers / languages</span>
+        <span class="subcat-rule"></span>
+        <span class="subcat-count">1</span>
+      </div>
+      <div class="work-grid">
+        <article class="work-card">
+          <div class="work-cover cover-mucompiler">
+            <span class="work-status archived">
+              <span class="pulse"></span>
+              <span>DONE</span>
+            </span>
+            <span class="work-num">№ 01 · 2024</span>
+          </div>
+          <div class="work-content">
+            <h2 class="work-card-title">Mini-<span class="it">Pascal</span> compiler</h2>
+            <p class="work-card-tagline">Lexer + parser + type checker + LLVM codegen για ένα subset της Pascal. Course final.</p>
+            <div class="work-stack">
+              <span class="chip">ocaml</span>
+              <span class="chip">llvm</span>
+              <span class="chip">menhir</span>
+            </div>
+          </div>
+          <div class="work-actions">
+            <a href="#" class="primary">Case study →</a>
+            <a href="#" class="ext">GitHub ↗</a>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- machine learning -->
+    <div class="subcat">
+      <div class="subcat-head">
+        <span class="subcat-label">▸ machine learning</span>
+        <span class="subcat-rule"></span>
+        <span class="subcat-count">1</span>
+      </div>
+      <div class="work-grid">
+        <article class="work-card">
+          <div class="work-cover cover-hackathens">
+            <span class="work-status archived">
+              <span class="pulse"></span>
+              <span>DONE</span>
+            </span>
+            <span class="work-num">№ 01 · 2025</span>
+          </div>
+          <div class="work-content">
+            <h2 class="work-card-title">Image <span class="it">captioning</span> w/ transformers</h2>
+            <p class="work-card-tagline">ViT encoder + GPT-2 decoder, fine-tuned σε COCO. Έγραψα και attention visualizations.</p>
+            <div class="work-stack">
+              <span class="chip">pytorch</span>
+              <span class="chip">transformers</span>
+              <span class="chip">cuda</span>
+            </div>
+          </div>
+          <div class="work-actions">
+            <a href="#" class="primary">Case study →</a>
+            <a href="#" class="ext">GitHub ↗</a>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- distributed systems -->
+    <div class="subcat">
+      <div class="subcat-head">
+        <span class="subcat-label">▸ distributed systems</span>
+        <span class="subcat-rule"></span>
+        <span class="subcat-count">1</span>
+      </div>
+      <div class="work-grid">
+        <article class="work-card">
+          <div class="work-cover cover-gkiafis">
+            <span class="work-status archived">
+              <span class="pulse"></span>
+              <span>DONE</span>
+            </span>
+            <span class="work-num">№ 01 · 2025</span>
+          </div>
+          <div class="work-content">
+            <h2 class="work-card-title">Raft <span class="it">implementation</span></h2>
+            <p class="work-card-tagline">Leader election + log replication από το paper. Σε Go, με tests που πέρασαν στο 95% των cases.</p>
+            <div class="work-stack">
+              <span class="chip">go</span>
+              <span class="chip">grpc</span>
+              <span class="chip">raft</span>
+            </div>
+          </div>
+          <div class="work-actions">
+            <a href="#" class="primary">Case study →</a>
+            <a href="#" class="ext">GitHub ↗</a>
+          </div>
+        </article>
+      </div>
+    </div>
+
+  </section>
+
 </main>
 
 <!-- FOOTER -->

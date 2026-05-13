@@ -1,0 +1,17 @@
+---
+title: "Custom thread *library* from scratch"
+description: "User-space threads, scheduler, mutexes. Setjmp/longjmp for context switching."
+seriesSlug: "os-coursework"
+seriesOrder: 1
+seriesLabel: "HW1"
+status: "done"
+stack: ["c", "pthread", "setjmp"]
+---
+
+Threads from user-space. A round-robin scheduler. Mutexes. Condition variables that work, I think.
+
+## What it asked for
+
+Write a POSIX-style thread library without using `pthread`. Tools we had: `setjmp/longjmp`, `ucontext`, `signal`. Zero help from the kernel.
+
+The hard part wasn't the context switch. It was figuring out *why* C considers it acceptable to leave undefined what happens if you return from a setjmp/longjmp in a clean race-condition case.

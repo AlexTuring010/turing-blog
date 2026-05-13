@@ -1,0 +1,17 @@
+---
+title: "Custom thread *library* από το μηδέν"
+description: "User-space threads, scheduler, mutexes. Setjmp/longjmp για context switch."
+seriesSlug: "os-coursework"
+seriesOrder: 1
+seriesLabel: "HW1"
+status: "done"
+stack: ["c", "pthread", "setjmp"]
+---
+
+Threads από user-space. Ένα scheduler που κάνει round-robin. Mutexes. Condition variables που λειτουργούν, νομίζω.
+
+## Τι ζητούσε
+
+Να γράψουμε μια POSIX-style thread library που να μη χρησιμοποιεί `pthread`. Όλα τα tools που είχαμε στη διάθεσή μας: `setjmp/longjmp`, `ucontext`, `signal`. Καμία βοήθεια από το kernel.
+
+Το hard part δεν ήταν το context switch. Ήταν να καταλάβω *γιατί* στο C είναι αποδεκτό να μη ξέρεις τι θα γίνει αν επιστρέψεις από μια setjmp/longjmp σε μια ξεκάθαρη περίπτωση race condition.

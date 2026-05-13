@@ -99,14 +99,127 @@ description: "..."
 year: 2026
 status: "live"            # live | wip | archived | award
 statusLabel: "LIVE"        # localized — "ΖΩΝΤΑΝΟ" in EL, "LIVE" in EN, or "2ND PLACE" etc
+category: "side-project"  # required, one of the top-level groups (see below)
+subcategory: "web"        # optional, used only for clusters that support sub-grouping
 stack: ["rust", "wasm", "leaflet", "postgis"]
 links:
   live: "https://crowdless.example.com"
   github: "https://github.com/alex/crowdless"
-order: 1                  # for sort order in archive
+order: 1                  # for sort order within (sub)cluster
 cover: "/covers/crowdless.png"
 ---
 ```
+
+Series (composite cards that group multiple coursework items, mostly in `school`) are file-based — see the "Project series" section below for the full schema.
+
+### Project taxonomy (two-level)
+
+The work archive groups projects by **category** (top-level), with optional **subcategory** for clusters that have enough variety.
+
+**Top-level categories** (the `category` frontmatter field):
+- `side-project` — personal initiatives, has subcategories
+- `freelance` — paid client work, flat list (no subcategories)
+- `competition` — hackathons, ICPC, etc., flat list (no subcategories)
+- `school` — coursework worth showing, has subcategories
+
+**Subcategories** (the `subcategory` frontmatter field — only for `side-project` and `school`):
+- `web` — websites, web apps, tools with a browser interface
+- `systems` — OS, kernels, low-level work
+- `compilers` — interpreters, compilers, language tooling
+- `ml` — machine learning, neural networks
+- `distributed` — distributed systems, consensus, networking
+- `data` — databases, data engineering
+- `cli` — command-line tools
+
+If `category: "freelance"` or `category: "competition"`, the `subcategory` field is ignored (these are flat lists).
+
+The work archive page **dynamically groups** projects: it shows top-level clusters in a fixed order (side-project, freelance, competition, school), and within each cluster that supports subcategories, groups projects by subcategory. **Empty subcategories are hidden.** If a cluster has only one subcategory's worth of projects, render it as a flat grid without the subcategory header (avoids a single sad subcategory row).
+
+URL filter params can target both levels: `/el/work?category=side-project` or `/el/work?subcategory=ml` (filters across all clusters). Subcategories themselves don't have dedicated routes — they're purely a grouping mechanism on the archive page.
+
+### Project series (homework sets, multi-part coursework)
+
+Some projects belong together as a **series** — for example, three homework assignments from the same Operating Systems course. Rather than rendering them as three separate cards (which clutters the archive), the design groups them into **one composite "series card"** that lists all items inside.
+
+Series live in their own folder:
+
+```
+content/projects/
+├── series/
+│   ├── os-coursework.el.mdx      ← series metadata (title, context, etc.)
+│   ├── os-coursework.en.mdx
+│   ├── os-coursework/
+│   │   ├── hw1.el.mdx            ← individual items
+│   │   ├── hw1.en.mdx
+│   │   ├── hw2.el.mdx
+│   │   ├── hw2.en.mdx
+│   │   ├── hw3.el.mdx
+│   │   └── hw3.en.mdx
+```
+
+The series file's frontmatter:
+```yaml
+---
+title: "Operating Systems coursework"
+context: "NTUA · CS-3.5 · Spring 2025"
+category: "school"
+subcategory: "systems"
+year: 2025
+order: 1
+stack: ["c", "pthread", "xv6", "fuse", "linux"]   # union of items' stacks, manually curated
+---
+```
+
+Each item file's frontmatter:
+```yaml
+---
+title: "Custom thread library από το μηδέν"
+seriesSlug: "os-coursework"                        # which series it belongs to
+seriesOrder: 1                                     # HW1, HW2, HW3...
+seriesLabel: "HW1"                                 # label shown on the series card
+status: "done"                                     # done | wip
+links:
+  github: "https://github.com/alex/os-hw1"
+---
+```
+
+Routing:
+- `/el/work` — archive page; renders series as composite cards
+- `/el/work/os-coursework` — series detail/case study page (lists all items with longer descriptions)
+- `/el/work/os-coursework/hw1` — individual item case study
+
+The series card on the archive page links each item's title directly to `/el/work/os-coursework/hw1`. The series header itself (course name) links to `/el/work/os-coursework`.
+
+**Build-time validation:**
+- Every item must reference an existing series via `seriesSlug`
+- Both locales required for every item (same rule as posts)
+- A series with 0 items is hidden from the archive (not an error — useful for staging new series before items are written)
+
+### Cross-linking posts to projects
+
+Posts can declare a related project via the optional `relatedProject` field:
+
+```yaml
+---
+title: "Γιατί έγραψα τον δικό μου compiler"
+date: "2026-02-14"
+tags: ["learning", "compilers"]
+relatedProject: "mu-compiler"   # optional — project slug or series-slug/item-slug
+readingTime: 12
+---
+```
+
+Notes:
+- The value is a project slug (e.g. `crowdless`) or a `series-slug/item-slug` pair (e.g. `os-coursework/hw1`)
+- One post → at most one project
+- The reverse direction (project → posts that mention it) is **computed at build time**, not stored in project frontmatter
+
+Display:
+- **Post page**: a green-left-bordered "About: <project> →" pill renders between subtitle and author row.
+- **Project case study page**: a dark "Posts about this" band lists all posts where `relatedProject === this.slug` (or `this.series/this.itemSlug` for series items). Hidden when there are no related posts.
+- **Work archive**: unchanged — no cross-link indicators on cards.
+
+**Build-time validation**: if a post has `relatedProject: "foo"`, project "foo" (or `series/item`) must exist in at least one locale.
 
 ## Build-time validation
 
@@ -116,6 +229,10 @@ Add a build script that fails the build if:
 2. Frontmatter is missing required fields
 3. A tag in `tags: [...]` is not in the allowed taxonomy
 4. A status is not one of `live | wip | archived | award`
+5. A `category` value is not one of `side-project | freelance | competition | school`
+6. A `subcategory` value (when present) is not one of `web | systems | compilers | ml | distributed | data | cli`
+7. A series item's `seriesSlug` references a series that doesn't exist
+8. A post's `relatedProject` doesn't resolve to an existing project or series item
 
 This catches translation gaps before they hit production. Add it to `npm run build`.
 
@@ -128,12 +245,9 @@ This catches translation gaps before they hit production. Add it to `npm run bui
 - `life` — personal, opinion, reflection
 - `notes` — short rants, half-formed thoughts
 
-**Projects** — `content/projects/*.mdx`:
-- `side-project` — personal initiatives
-- `freelance` — paid client work
-- `competition` — entries (HackAthens, etc.)
+**Projects** — see the two-level taxonomy in the "Project taxonomy" section above. Projects don't use the `tags` field; they use `category` + optional `subcategory`.
 
-URL filter params use the **English keys** regardless of locale: `/el/writing?tag=learning`. The locale only changes the display label, not the URL value.
+URL filter params use the **English keys** regardless of locale: `/el/writing?tag=learning`, `/el/work?category=side-project`. The locale only changes the display label, not the URL value.
 
 ## Date formatting
 

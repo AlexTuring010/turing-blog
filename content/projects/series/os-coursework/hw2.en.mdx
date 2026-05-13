@@ -1,0 +1,13 @@
+---
+title: "Virtual memory paging *+ swap*"
+description: "Page-replacement in a simulated OS. FIFO, LRU, Second-chance. Trace files, hit rates."
+seriesSlug: "os-coursework"
+seriesOrder: 2
+seriesLabel: "HW2"
+status: "done"
+stack: ["c", "linux"]
+---
+
+Trace files of memory accesses, a simulator, side-by-side policy comparison.
+
+The useful part: when you run the same traces through four different algorithms and watch LRU hit 12% while FIFO hits 11.8%, you realise "the right algorithm" depends on which access pattern your workload actually has.

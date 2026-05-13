@@ -1,11 +1,14 @@
-import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { RichText } from "@/components/ui/RichText";
-import { ProjectCover } from "@/components/work/ProjectCover";
-import { StatusBadge } from "@/components/work/StatusBadge";
+import { ProjectCard } from "@/components/work/ProjectCard";
+import { SeriesCard } from "@/components/work/SeriesCard";
 import { routing, type Locale } from "@/i18n/routing";
-import { getAllProjects } from "@/lib/content";
-import type { Project } from "@/lib/types";
+import {
+  getTotalProjectsCount,
+  getWorkArchiveGroups,
+  type CategoryGroup,
+} from "@/lib/content";
+import type { ProjectSubcategory, WorkArchiveProject } from "@/lib/types";
 
 export default async function WorkPage({ params }: PageProps<"/[locale]">) {
   const { locale: rawLocale } = await params;
@@ -13,7 +16,8 @@ export default async function WorkPage({ params }: PageProps<"/[locale]">) {
   const locale = rawLocale as Locale;
   setRequestLocale(locale);
 
-  const projects = getAllProjects(locale);
+  const groups = getWorkArchiveGroups(locale);
+  const total = getTotalProjectsCount(locale);
   const t = await getTranslations("workArchive");
 
   return (
@@ -21,7 +25,7 @@ export default async function WorkPage({ params }: PageProps<"/[locale]">) {
       <header className="mb-12 max-w-[720px]">
         <div className="mb-4 flex items-center gap-[14px] font-mono text-[13px] font-medium uppercase tracking-[0.02em] text-ink-mute">
           <span>
-            {projects.length} {t("eyebrowSuffix")}
+            {total} {total === 1 ? t("countSingular") : t("countPlural")}
           </span>
           <span className="h-[3px] w-[3px] rounded-full bg-ink-mute" />
           <span>{t("yearRange")}</span>
@@ -37,95 +41,143 @@ export default async function WorkPage({ params }: PageProps<"/[locale]">) {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {projects.map((project, i) => (
-          <ProjectCard key={project.slug} project={project} index={i} locale={locale} />
-        ))}
-      </div>
+      {groups.map((group, idx) => (
+        <Cluster
+          key={group.category}
+          group={group}
+          index={idx + 1}
+          locale={locale}
+        />
+      ))}
     </main>
   );
 }
 
-async function ProjectCard({
-  project,
+async function Cluster({
+  group,
   index,
   locale,
 }: {
-  project: Project;
+  group: CategoryGroup;
   index: number;
   locale: Locale;
 }) {
   const t = await getTranslations("workArchive");
+  const clusterLabel = `/${index.toString().padStart(2, "0")}`;
+  const titleKey = `categories.${group.category}` as const;
+  const totalUnits =
+    group.units.length +
+    group.subcategories.reduce((sum, s) => sum + s.units.length, 0);
+  const countLabel =
+    totalUnits === 1
+      ? `1 ${t("countSingular")}`
+      : `${totalUnits} ${t("countPlural")}`;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-[14px] border-[1.5px] border-rule bg-paper-2 transition-all duration-[250ms] hover:-translate-x-[3px] hover:-translate-y-[3px] hover:border-coral hover:shadow-[6px_6px_0_var(--coral)]">
-      <ProjectCover project={project}>
-        <StatusBadge
-          status={project.status}
-          customLabel={project.statusLabel}
-          className="absolute left-[14px] top-[14px]"
-        />
-        <span className="absolute bottom-[14px] right-[14px] rounded-md border border-rule bg-[rgba(13,14,16,0.7)] px-[10px] py-1 font-mono text-[0.7rem] tracking-[0.1em] text-ink-mute">
-          № 0{index + 1} · {project.year}
+    <section className="mb-16 last:mb-0" id={group.category}>
+      <div className="mb-6 flex items-baseline gap-[18px] border-b border-rule pb-[14px]">
+        <span className="font-mono text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-ink-mute">
+          {clusterLabel}
         </span>
-      </ProjectCover>
-
-      <div className="flex flex-1 flex-col gap-[14px] px-[26px] pb-[22px] pt-6">
         <h2
-          className="text-[1.5rem] font-extrabold leading-[1.15] tracking-[-0.01em] text-ink"
+          className="text-[1.6rem] font-extrabold tracking-[-0.01em] text-ink"
           style={{ fontVariationSettings: '"opsz" 64' }}
         >
-          <RichText text={project.title} />
+          <RichText text={t(titleKey)} />
         </h2>
-        <p className="text-[0.95rem] font-normal leading-[1.5] text-ink-soft">
-          {project.description}
-        </p>
-        <div className="mt-auto flex flex-wrap gap-[6px] pt-[6px]">
-          {project.stack.map((s) => (
-            <span
-              key={s}
-              className="rounded-md border border-rule bg-paper px-[9px] py-[3px] font-mono text-[11px] font-medium tracking-[0.02em] text-ink-soft"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+        <span className="ml-auto font-mono text-[0.8rem] font-medium text-coral">
+          {countLabel}
+        </span>
       </div>
 
-      <div className="flex items-center gap-[14px] border-t border-rule bg-paper px-[26px] py-[14px] text-[13px] font-semibold">
-        <Link
-          href={`/${locale}/work/${project.slug}`}
-          className="inline-flex items-center gap-[5px] text-ink transition-all hover:gap-[8px] hover:text-coral"
-        >
-          {t("actionCaseStudy")} →
-        </Link>
-        {project.links?.live && (
-          <>
-            <span className="ml-auto text-rule">·</span>
-            <a
-              href={project.links.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-[5px] text-ink-mute transition-colors hover:text-coral"
-            >
-              {t("actionLive")} ↗
-            </a>
-          </>
-        )}
-        {project.links?.github && (
-          <>
-            <span className={project.links?.live ? "text-rule" : "ml-auto"}>·</span>
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-[5px] text-ink-mute transition-colors hover:text-coral"
-            >
-              {t("actionGitHub")} ↗
-            </a>
-          </>
-        )}
+      {group.units.length > 0 && (
+        <UnitGrid units={group.units} locale={locale} />
+      )}
+
+      {group.subcategories.map((sub) => (
+        <Subcategory
+          key={sub.subcategory}
+          subcategory={sub.subcategory}
+          units={sub.units}
+          locale={locale}
+        />
+      ))}
+    </section>
+  );
+}
+
+async function Subcategory({
+  subcategory,
+  units,
+  locale,
+}: {
+  subcategory: string;
+  units: WorkArchiveProject[];
+  locale: Locale;
+}) {
+  const t = await getTranslations("workArchive");
+  const seriesCount = units.filter((u) => u.kind === "series").length;
+  // The design shows "1 series · 3 items" — "items" counts individual
+  // assignments inside the series, plus any standalone projects in the
+  // subcategory. When no series is present, just the visible card count.
+  const standaloneCount = units.filter((u) => u.kind === "project").length;
+  const seriesItemCount = units.reduce(
+    (acc, u) => acc + (u.kind === "series" ? u.items.length : 0),
+    0,
+  );
+  const label = t(`subcategories.${subcategory as ProjectSubcategory}`, {});
+  const countLabel =
+    seriesCount > 0
+      ? `${seriesCount} ${t("subcategorySeriesSuffix")} · ${seriesItemCount + standaloneCount} ${t("subcategoryItemsSuffix")}`
+      : `${standaloneCount}`;
+
+  return (
+    <div className="mb-9 last:mb-0">
+      <div className="mb-[18px] flex items-center gap-[14px]">
+        <span className="whitespace-nowrap font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-coral">
+          ▸ {label}
+        </span>
+        <span className="h-px flex-1 bg-rule" />
+        <span className="font-mono text-[11px] tracking-[0.05em] text-ink-mute">
+          {countLabel}
+        </span>
       </div>
-    </article>
+      <UnitGrid units={units} locale={locale} />
+    </div>
+  );
+}
+
+function UnitGrid({
+  units,
+  locale,
+}: {
+  units: WorkArchiveProject[];
+  locale: Locale;
+}) {
+  return (
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      {units.map((u, i) => {
+        const number = i + 1;
+        if (u.kind === "series") {
+          return (
+            <SeriesCard
+              key={`series-${u.series.slug}`}
+              series={u.series}
+              items={u.items}
+              number={number}
+              locale={locale}
+            />
+          );
+        }
+        return (
+          <ProjectCard
+            key={u.project.slug}
+            project={u.project}
+            number={number}
+            locale={locale}
+          />
+        );
+      })}
+    </div>
   );
 }

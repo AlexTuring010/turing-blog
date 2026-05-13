@@ -1,0 +1,13 @@
+---
+title: "User-space *filesystem* with FUSE"
+description: "A read/write filesystem written in C, exposed to the VFS via FUSE."
+seriesSlug: "os-coursework"
+seriesOrder: 3
+seriesLabel: "HW3"
+status: "done"
+stack: ["c", "fuse", "linux"]
+---
+
+A filesystem that doesn't store on disk, but in a memory-mapped file. Inodes, directory entries, free-block bitmap. All the classics.
+
+The extra hour: writing logs every time FUSE calls one of your callbacks. After two weeks of debugging, the log file is your only friend.

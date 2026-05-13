@@ -1,5 +1,5 @@
 // Inline SVG icons. These never change so they don't need to be in /public.
-// Paths copied verbatim from the design HTML (v14-hacker-green.html).
+// Paths copied verbatim from the design HTML (homepage.html).
 
 type IconProps = { className?: string; size?: number };
 

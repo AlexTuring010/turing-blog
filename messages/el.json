@@ -97,16 +97,48 @@
     "yearRange": "2024 — 2026",
     "title": "Work*.*",
     "lede": "Projects που δουλεύω, projects που τέλειωσα, και projects που τυπικά τέλειωσαν αλλά πάντα κάτι έχουν να φτιαχτεί ακόμα.",
-    "filterLabel": "filter:",
-    "filterAll": "All",
+    "countSingular": "project",
+    "countPlural": "projects",
+    "subcategoryItemsSuffix": "items",
+    "subcategorySeriesSuffix": "series",
     "actionCaseStudy": "Case study",
     "actionLive": "Live",
-    "actionGitHub": "GitHub"
+    "actionGitHub": "GitHub",
+    "seriesBadge": "SERIES",
+    "categories": {
+      "side-project": "Side *projects.*",
+      "freelance": "Free*lance.*",
+      "competition": "Compe*titions.*",
+      "school": "School*.*"
+    },
+    "subcategories": {
+      "web": "web / tools",
+      "systems": "systems / OS",
+      "compilers": "compilers / languages",
+      "ml": "machine learning",
+      "distributed": "distributed systems",
+      "data": "databases / data",
+      "cli": "command-line tools",
+      "_unsorted": "other"
+    },
+    "seriesItemStatus": {
+      "done": "Done",
+      "wip": "WIP"
+    }
   },
   "workCase": {
     "backToWork": "Πίσω στο work",
+    "backToSeries": "Πίσω στη σειρά",
     "stackLabel": "stack",
-    "yearLabel": "year"
+    "yearLabel": "year",
+    "categoryLabel": "category",
+    "relatedPostsLabel": "▸ Posts about this",
+    "relatedPostsCountSingular": "post",
+    "relatedPostsCountPlural": "posts",
+    "seriesItemsLabel": "▸ In this series",
+    "linkLive": "Live",
+    "linkGitHub": "GitHub",
+    "linkDocs": "Documentation"
   },
   "status": {
     "live": "LIVE",
@@ -122,6 +154,7 @@
     "authorMeta": "CS student · Athens",
     "prevLabel": "← Προηγούμενο",
     "nextLabel": "Επόμενο →",
+    "aboutLabel": "About:",
     "missing": {
       "eyebrow": "— Δεν έχει μεταφραστεί ακόμα",
       "body": "Αυτό το post είναι διαθέσιμο μόνο στα <locale></locale>.",

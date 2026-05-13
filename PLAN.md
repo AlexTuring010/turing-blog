@@ -4,7 +4,7 @@ This is a phased plan. Work through phases in order. Each phase ends with a work
 
 **Reference materials**:
 - `CLAUDE.md` — project conventions and rules
-- `design-references/v14-hacker-green.html` — homepage
+- `design-references/homepage.html` — homepage
 - `design-references/post.html` — single post reading page
 - `design-references/writing.html` — writing archive
 - `design-references/work.html` — work archive
@@ -34,7 +34,7 @@ Get a Next.js project running with the right plumbing. No design work yet.
 
 ## Phase 1 — Homepage (~2 days)
 
-Build the homepage from `v14-hacker-green.html`. This is the most complex single page — get it right before moving on.
+Build the homepage from `homepage.html`. This is the most complex single page — get it right before moving on.
 
 Order of work:
 
@@ -86,17 +86,21 @@ Build the MDX loading and rendering pipeline. No new pages yet.
 
 ---
 
-## Phase 3 — Archive pages (~1.5 days)
+## Phase 3 — Archive pages (~2 days)
 
-Build the writing archive and work archive.
+Build the writing archive, work archive (with category clustering + series), and project detail page.
 
 - [ ] `app/[locale]/writing/page.tsx`: matches `design-references/writing.html`. Vertical post feed with date+tag meta, hoverable titles, read time on right. Filter pills at top.
 - [ ] Filter logic: client-side state, filters the visible list. Update URL with `?tag=learning` so filters are shareable.
-- [ ] `app/[locale]/work/page.tsx`: matches `design-references/work.html`. 2-column grid of project cards. Each project card has cover (or generated CSS gradient placeholder if no cover image), status pill, project number, title, tagline, stack chips, and case-study/external link buttons.
-- [ ] Author 2 sample projects in MDX, both locales (use any of: crowdless, hackathens, μ-compiler from the designs)
-- [ ] `app/[locale]/work/[slug]/page.tsx`: case study page. Design isn't mocked — defer to a simple version: similar to post page but wider, with embedded screenshots. Document this gap and ask the user before designing.
+- [ ] `app/[locale]/work/page.tsx`: matches `design-references/work.html`. **Category clusters** (side-project, freelance, competition, school) rendered in fixed order; **subcategory sub-sections** within clusters that support them; empty groups hidden; single-subcategory clusters render flat. **No filter pills** — the cluster structure replaces them. Each project card has cover (or CSS gradient placeholder), status pill, project number, title, tagline, stack chips, case-study/external link buttons.
+- [ ] **Series composite card** on the work archive: 3px green top border, no 16:9 cover (header strip with SERIES badge + project number), item rows linking to individual case studies, combined stack chips at the bottom. Series with 0 items is hidden.
+- [ ] Author sample projects in MDX, both locales, including one **series** (e.g. `os-coursework`) with 2-3 items under `content/projects/series/`.
+- [ ] `app/[locale]/work/[slug]/page.tsx`: project detail page per `design-references/project-detail.html`. Two-column header (text left, square cover right), category·year·status meta row, tagline, stack chips, primary/secondary action buttons, "Posts about this" related-posts band (dark, between header and body) when posts reference this project. 1000px wrap, 720px reading column for the case study body.
+- [ ] `app/[locale]/work/[series-slug]/page.tsx`: series detail page (lists items with longer context).
+- [ ] `app/[locale]/work/[series-slug]/[item-slug]/page.tsx`: series item case study (same template as standalone project detail).
+- [ ] Cross-linking: post page renders a green-left-bordered "About: <project> →" pill when frontmatter declares `relatedProject`. Build-time validation ensures the target exists.
 
-**Phase 3 is done when**: both archives are populated from MDX, filters work, navigation between archive → individual page works in both locales.
+**Phase 3 is done when**: both archives are populated from MDX, filters work, navigation between archive → individual page works in both locales, series render correctly, related posts surface on project case studies.
 
 ---
 

@@ -1,0 +1,13 @@
+---
+title: "User-space *filesystem* με FUSE"
+description: "Ένα read/write filesystem γραμμένο σε C, εκτεθειμένο στο VFS μέσω FUSE."
+seriesSlug: "os-coursework"
+seriesOrder: 3
+seriesLabel: "HW3"
+status: "done"
+stack: ["c", "fuse", "linux"]
+---
+
+Filesystem που δεν αποθηκεύει σε disk, αλλά σε memory-mapped αρχείο. Inodes, directory entries, free-block bitmap. Όλα τα κλασικά.
+
+Το επιπλέον hour: να γράφεις log όταν το FUSE καλεί καθεμία από τις callback functions σου. Μετά από 2 εβδομάδες debug, ο log είναι ο μόνος σου φίλος.
